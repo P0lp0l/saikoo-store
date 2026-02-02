@@ -1,0 +1,252 @@
+Enter<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم فلافيلو | Admin Panel 🐘</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        h2 { color: #ff4d94; font-weight: 700; text-shadow: 0 0 10px rgba(255, 77, 148, 0.5); }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #ff4d94;
+            box-shadow: none;
+        }
+
+        /* تنسيق الأزرار */
+        .btn-primary {
+            background: linear-gradient(45deg, #ff4d94, #ff758c);
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 77, 148, 0.4); }
+
+        .btn-danger { border-radius: 10px; padding: 5px 15px; }
+
+        /* خانة كلمة المرور */
+        .password-container { position: relative; }
+        .toggle-password {
+            position: absolute; left: 15px; top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ff4d94;
+        }
+
+        /* الجدول */
+        .table { color: white; margin-top: 20px; }
+        .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 10px; }
+        
+        #login-section { max-width: 450px; margin: 100px auto; }
+        #admin-content { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-section" class="admin-card animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4">تسجيل دخول الإدارة </h2>
+    <div class="mb-3">
+        <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني">
+    </div>
+    <div class="mb-3 password-container">
+        <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور">
+        <i class="fas fa-eye toggle-password" onclick="togglePass('login-password')"></i>
+    </div>
+    <button class="btn btn-primary w-100" onclick="login()">دخول الان</button>
+</div>
+
+<div id="admin-content" class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>لوحة تحكم Flafilo Store</h2>
+        <button class="btn btn-outline-light" onclick="logout()">خروج</button>
+    </div>
+
+    <div class="admin-card">
+        <h4>إضافة هدية جديدة ✨</h4>
+        <div class="row g-3">
+            <div class="col-md-4"><input type="text" id="p-name" class="form-control" placeholder="اسم الهدية"></div>
+            <div class="col-md-3"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
+            <div class="col-md-5"><input type="text" id="p-image" class="form-control" placeholder="رابط صورة الهدية"></div>
+            <div class="col-12 text-center">
+                <button class="btn btn-primary px-5" onclick="addProduct()">إضافة للمتجر الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <h4>تغيير كلمة المرور 🔐</h4>
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8 password-container">
+                <input type="password" id="new-password" class="form-control" placeholder="كلمة المرور الجديدة">
+                <i class="fas fa-eye toggle-password" onclick="togglePass('new-password')"></i>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-warning w-100 fw-bold" onclick="updatePassword()">تحديث كلمة السر</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <h4>المنتجات الحالية</h4>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>الصورة</th>
+                        <th>الاسم</th>
+                        <th>السعر</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+    // إعدادات Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
+        authDomain: "flafilo-store.firebaseapp.com",
+        projectId: "flafilo-store",
+        storageBucket: "flafilo-store.firebasestorage.app",
+        messagingSenderId: "470812703135",
+        appId: "1:470812703135:web:ee2359353b3ad64b36a5aa"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // إظهار وإخفاء كلمة المرور
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+    }
+
+    // تنبيهات التوست الجميلة
+    function showToast(msg, color) {
+        Toastify({
+            text: msg,
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            style: { background: color, borderRadius: "10px" }
+        }).showToast();
+    }
+
+    // تسجيل الدخول
+    async function login() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-password').value;
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            showToast("مرحباً بك يا مدير فلافيلو 👋", "#25d366");
+            loadProducts();
+        } catch (error) {
+            showToast("خطأ: تأكد من بياناتك ❌", "#ff4d4d");
+        }
+    }
+
+    // إضافة منتج
+    async function addProduct() {
+        const name = document.getElementById('p-name').value;
+        const price = document.getElementById('p-price').value;
+        const image = document.getElementById('p-image').value;
+
+        if(!name || !price || !image) return showToast("املأ كل الخانات! ⚠️", "#ff9800");
+
+        try {
+            await db.collection("gifts").add({ name, price, image });
+            showToast("تمت إضافة الهدية بنجاح 🎁", "#25d366");
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-image').value = '';
+        } catch (e) { showToast("فشل الرفع ❌", "#ff4d4d"); }
+    }
+
+    // تحميل وحذف المنتجات
+    function loadProducts() {
+        db.collection("gifts").onSnapshot(snap => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                list.innerHTML += `
+                    <tr>
+                        <td><img src="${p.image}" class="table-img"></td>
+                        <td>${p.name}</td>
+                        <td>${p.price} ج.م</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteProduct('${doc.id}')">حذف</button></td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
+    async function deleteProduct(id) {
+        if(confirm("هل أنت متأكد من حذف هذه الهدية؟")) {
+            await db.collection("gifts").doc(id).delete();
+            showToast("تم الحذف بنجاح ✅", "#333");
+        }
+    }
+
+    // تغيير كلمة المرور
+    async function updatePassword() {
+        const user = auth.currentUser;
+        const newPass = document.getElementById('new-password').value;
+        if(newPass.length < 6) return showToast("كلمة السر يجب أن تكون 6 أحرف فأكثر! ⚠️", "#ff9800");
+        
+        try {
+            await user.updatePassword(newPass);
+            showToast("تم تحديث كلمة المرور بنجاح 🔐", "#25d366");
+        } catch (e) { showToast("أعد تسجيل الدخول ثم حاول مرة أخرى ❌", "#ff4d4d"); }
+    }
+
+    function logout() { auth.signOut(); location.reload(); }
+</script>
+</body>
+</html>
