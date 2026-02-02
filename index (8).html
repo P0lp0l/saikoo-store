@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flafilo Store | فلافيلو ستور 🐘</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body { 
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background: #0b0d17; 
+            background: radial-gradient(circle, #1a1c2c 0%, #0b0d17 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* تأثير القلوب والورود */
+        .falling-elements {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .element { position: absolute; top: -50px; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .hero { 
+            padding: 60px 0; text-align: center; 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ff4d94;
+            margin-bottom: 40px;
+        }
+
+        /* الخانات (الكروت) - جعلناها واضحة جداً */
+        .card { 
+            border: 2px solid rgba(255, 77, 148, 0.3); /* برواز وردي مضيء */
+            border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px);
+            transition: 0.4s;
+            overflow: hidden;
+        }
+        .card:hover { 
+            transform: scale(1.05); 
+            border-color: #ff4d94;
+            box-shadow: 0 0 20px rgba(255, 77, 148, 0.4);
+        }
+
+        .image-holder { height: 250px; background: rgba(255,255,255,0.05); }
+        .card-img-top { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-title { color: #fff; font-weight: 700; margin-top: 15px; }
+        .price-text { color: #ff4d94; font-size: 1.5rem; font-weight: 800; margin: 10px 0; }
+
+        .btn-order { 
+            background: #25d366; color: white; border-radius: 50px; 
+            font-weight: bold; text-decoration: none; display: block;
+            padding: 10px; margin-top: 10px; transition: 0.3s;
+        }
+        .btn-order:hover { background: #128c7e; color: white; }
+
+    </style>
+</head>
+<body>
+
+<div class="falling-elements" id="particles"></div>
+
+<div class="hero animate__animated animate__fadeIn">
+    <h1 class="display-4 fw-bold">Flafilo Store 🐘</h1>
+    <p class="lead">عالم الهدايا السحرية - فلافيلو ستور</p>
+</div>
+
+<div class="container">
+    <div id="products-row" class="row row-cols-1 row-cols-md-3 g-4">
+        </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+<script>
+    // تأثير العناصر المتساقطة
+    const partContainer = document.getElementById('particles');
+    const icons = ['❤️', '🌸', '🎀', '✨'];
+    setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'element';
+        el.innerText = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = Math.random() * 3 + 2 + 's';
+        partContainer.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+    }, 300);
+
+    // إعدادات Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
+        authDomain: "flafilo-store.firebaseapp.com",
+        projectId: "flafilo-store",
+        storageBucket: "flafilo-store.firebasestorage.app",
+        messagingSenderId: "470812703135",
+        appId: "1:470812703135:web:ee2359353b3ad64b36a5aa"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function loadGifts() {
+        db.collection("gifts").onSnapshot((snapshot) => {
+            const row = document.getElementById('products-row');
+            row.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const item = doc.data();
+                row.innerHTML += `
+                    <div class="col animate__animated animate__zoomIn">
+                        <div class="card h-100 p-2">
+                            <div class="image-holder">
+                                <img src="${item.image}" class="card-img-top" alt="gift">
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="product-title">${item.name}</div>
+                                <div class="price-text">${item.price} ج.م</div>
+                                <a href="https://wa.me/201017071109?text=أريد طلب: ${item.name}" class="btn-order">
+                                    اطلب عبر واتساب 💬
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    }
+    loadGifts();
+</script>
+</body>
+</html>
