@@ -12,28 +12,26 @@
         .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; transition: 0.3s; }
         .carousel-item img { height: 350px; object-fit: cover; border-radius: 15px; }
         
+        /* البحث */
         .search-box { max-width: 500px; margin: 0 auto 30px; }
         .search-input { background: rgba(255,255,255,0.1); border: 2px solid #00d4ff; color: white; border-radius: 50px; padding: 12px; text-align: center; }
-        .search-input:focus { background: rgba(255,255,255,0.2); border-color: #ff4d94; color: white; box-shadow: 0 0 10px #ff4d94; outline: none; }
 
-        /* تنسيق التفاعل بالألوان */
-        .reaction-container { display: flex; justify-content: center; gap: 50px; margin: 20px 0; }
-        .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; opacity: 0.6; }
-        .react-group:hover { transform: scale(1.2); opacity: 1; }
-        .emoji-btn { font-size: 2.5rem; line-height: 1; margin-bottom: 5px; user-select: none; }
-        .count-label { font-weight: bold; font-size: 1.1rem; color: white; }
+        /* تنسيق الكلمات الجديدة */
+        .reaction-container { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
+        .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; user-select: none; }
         
-        /* الألوان عند الضغط */
-        .react-group.active-like { opacity: 1; }
-        .react-group.active-like .emoji-btn { filter: drop-shadow(0 0 10px #28a745); }
-        .react-group.active-like .count-label { color: #28a745; text-shadow: 0 0 5px rgba(40, 167, 69, 0.5); }
+        .vote-text { font-size: 1.2rem; font-weight: bold; color: rgba(255,255,255,0.5); transition: 0.3s; margin-bottom: 5px; }
+        .count-label { font-size: 1rem; color: white; opacity: 0.8; }
 
-        .react-group.active-dislike { opacity: 1; }
-        .react-group.active-dislike .emoji-btn { filter: drop-shadow(0 0 10px #dc3545); }
-        .react-group.active-dislike .count-label { color: #dc3545; text-shadow: 0 0 5px rgba(220, 53, 69, 0.5); }
+        /* ألوان التفاعل الملونة */
+        .active-like .vote-text { color: #28a745 !important; text-shadow: 0 0 10px rgba(40, 167, 69, 0.6); }
+        .active-like .count-label { color: #28a745; }
+
+        .active-dislike .vote-text { color: #dc3545 !important; text-shadow: 0 0 10px rgba(220, 53, 69, 0.6); }
+        .active-dislike .count-label { color: #dc3545; }
 
         .price { color: #ff4d94; font-size: 1.6rem; font-weight: bold; margin-bottom: 15px; }
-        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; width: 100%; border: none; }
+        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; width: 100%; text-align: center; }
         .heart { position: fixed; top: -10%; color: #ff4d94; animation: fall linear forwards; z-index: 1000; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
@@ -42,12 +40,9 @@
 
 <div class="container py-5 text-center">
     <h1 class="display-4 mb-2" style="font-weight:700; color:#00d4ff;">SAIKO Store</h1>
-    <p class="lead mb-4">عالم الهدايا والإكسسوارات المميزة 🛍️</p>
-
     <div class="search-box">
         <input type="text" id="searchInput" class="form-control search-input" placeholder="🔍 ابحث عن هديتك..." onkeyup="filterItems()">
     </div>
-
     <div id="products-list" class="row mt-2 justify-content-center"></div>
 </div>
 
@@ -77,17 +72,26 @@
     async function handleVote(id, type) {
         const key = `voted_${id}`;
         const lastAction = localStorage.getItem(key);
-        if (lastAction === type) return;
-
         const docRef = db.collection("gifts").doc(id);
         const batch = db.batch();
-        if (!lastAction) {
+
+        if (lastAction === type) {
+            // إزالة التفاعل (Undo)
+            batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(-1) });
+            localStorage.removeItem(key);
+        } else if (!lastAction) {
+            // تفاعل جديد
             batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(1) });
+            localStorage.setItem(key, type);
         } else {
-            batch.update(docRef, { [lastAction]: firebase.firestore.FieldValue.increment(-1), [type]: firebase.firestore.FieldValue.increment(1) });
+            // تبديل التفاعل
+            batch.update(docRef, { 
+                [lastAction]: firebase.firestore.FieldValue.increment(-1),
+                [type]: firebase.firestore.FieldValue.increment(1) 
+            });
+            localStorage.setItem(key, type);
         }
         await batch.commit();
-        localStorage.setItem(key, type);
     }
 
     db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
@@ -98,30 +102,29 @@
             const imgs = data.images || (data.image ? [data.image] : []);
             const userChoice = localStorage.getItem(`voted_${doc.id}`);
             let carouselId = `slide-${doc.id}`;
-            let carouselItems = imgs.map((url, i) => `<div class="carousel-item ${i === 0 ? 'active' : ''}"><img src="${url}" class="d-block w-100" onerror="this.src='https://via.placeholder.com/350x350'"></div>`).join('');
+            let carouselItems = imgs.map((url, i) => `<div class="carousel-item ${i === 0 ? 'active' : ''}"><img src="${url}" class="d-block w-100"></div>`).join('');
             
             list.innerHTML += `
                 <div class="col-lg-4 col-md-6 col-11 product-col" data-name="${data.name}">
                     <div class="gift-card">
                         <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">${carouselItems}</div>
-                            ${imgs.length > 1 ? `<button class="carousel-control-prev" data-bs-target="#${carouselId}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : ''}
                         </div>
                         <h3 class="mt-3" style="font-weight:700;">${data.name}</h3>
                         
                         <div class="reaction-container">
                             <div class="react-group ${userChoice === 'likes' ? 'active-like' : ''}" onclick="handleVote('${doc.id}', 'likes')">
-                                <span class="emoji-btn">👍</span>
+                                <span class="vote-text">أعجبني</span>
                                 <span class="count-label">${data.likes || 0}</span>
                             </div>
                             <div class="react-group ${userChoice === 'dislikes' ? 'active-dislike' : ''}" onclick="handleVote('${doc.id}', 'dislikes')">
-                                <span class="emoji-btn">👎</span>
+                                <span class="vote-text">لم يعجبني</span>
                                 <span class="count-label">${data.dislikes || 0}</span>
                             </div>
                         </div>
 
                         <p class="price">${data.price} ج.م</p>
-                        <a href="https://wa.me/201289984200?text=أريد طلب: ${data.name}" class="btn-wa text-center">طلب عبر واتساب</a>
+                        <a href="https://wa.me/201289984200?text=طلب: ${data.name}" class="btn-wa">طلب عبر واتساب</a>
                     </div>
                 </div>`;
         });
