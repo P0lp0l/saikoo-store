@@ -3,57 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>SAIKO Store | سايكو ستور 🛍️</title>
-    <meta property="og:title" content="SAIKO Store | متجر سايكو">
-    <meta property="og:description" content="عالم الهدايا والإكسسوارات المميزة - متجر سايكو">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.ibb.co/vzPRY8Y/saiko-logo.png">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <title>لوحة تحكم سايكو ستور | Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { background: #0f0c29; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-        .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: 0.3s; }
-        .gift-card:hover { transform: translateY(-5px); border-color: #00d4ff; }
-        .carousel-item img { height: 350px; object-fit: cover; border-radius: 15px; background: #24243e; }
-        .price { color: #ff4d94; font-size: 1.6rem; font-weight: bold; margin-top: 10px; }
-        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; transition: 0.3s; border: none; }
-        .btn-wa:hover { background: #1ebe57; transform: scale(1.03); color: white; }
+        body { font-family: 'Cairo', sans-serif; background: #0f0c29; background: linear-gradient(to right, #24243e, #302b63, #0f0c29); color: white; min-height: 100vh; padding: 20px; }
+        .admin-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; margin-bottom: 30px; }
+        h2, h4 { color: #ff4d94; font-weight: 700; text-shadow: 0 0 10px rgba(255, 77, 148, 0.5); }
+        .form-control { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .btn-primary { background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; border-radius: 12px; padding: 12px; font-weight: bold; width: 100%; transition: 0.3s; }
         
-        /* تنسيق البحث */
-        .search-container { max-width: 600px; margin: 0 auto 40px; }
-        .search-input { background: rgba(255,255,255,0.1); border: 2px solid #ff4d94; color: white; border-radius: 50px; padding: 12px 25px; text-align: center; }
-        .search-input:focus { background: rgba(255,255,255,0.15); border-color: #00d4ff; color: white; box-shadow: 0 0 15px rgba(0,212,255,0.3); outline: none; }
+        .btn-designer { border: 2px solid #00d4ff; color: #00d4ff; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn-designer:hover { background: rgba(0, 212, 255, 0.1); color: white; transform: scale(1.02); }
 
-        /* تنسيق التفاعل */
-        .reaction-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 12px; padding: 5px 15px; transition: 0.3s; font-size: 0.9rem; }
-        .btn-like:hover { background: rgba(40, 167, 69, 0.2); border-color: #28a745; color: #28a745; }
-        .btn-dislike:hover { background: rgba(220, 53, 69, 0.2); border-color: #dc3545; color: #dc3545; }
+        #drop-area { border: 2px dashed #ff4d94; border-radius: 15px; background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; padding: 20px; text-align: center; }
+        .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .preview-item { position: relative; width: 80px; height: 80px; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d94; }
+        .remove-img { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        .heart { position: fixed; top: -10%; color: #ff4d94; animation: fall linear forwards; z-index: 1000; pointer-events: none; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .table { color: white; vertical-align: middle; }
+        .table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
+        #admin-content { display: none; }
+        #upload-status { color: #00d4ff; display: none; font-weight: bold; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container py-5 text-center">
-    <h1 class="display-4 mb-2" style="font-weight: 700; color: #00d4ff;">SAIKO Store</h1>
-    <p class="lead mb-4">عالم الهدايا الراقي - اختيارك الأول للفخامة 🛍️</p>
+<div id="login-section" class="admin-card" style="max-width: 450px; margin: 100px auto;">
+    <h2 class="text-center mb-4">دخول إدارة سايكو 🔐</h2>
+    <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني">
+    <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور">
+    <button class="btn btn-primary mt-3" onclick="login()">دخول الآن</button>
+    
+    <div class="text-center mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
+        <h5 style="color: #00d4ff; font-weight: bold;">عايز موقع احترافي لبراندك؟ 🚀</h5>
+        <p class="small text-white-50 px-2 mb-3">بصمم لك متجر إلكتروني متكامل، صفحات هبوط جذابة، ولوحات تحكم ذكية لإدارة شغلك زي دي بالظبط!</p>
+        <a href="https://wa.me/201553179352?text=أهلاً سايكو، كنت عايز استفسر عن تصميم موقع جديد" target="_blank" class="btn-designer">
+            <i class="fab fa-whatsapp me-2"></i> تواصل مع المصمم SAIKO 💬
+        </a>
+        <p class="mt-2" style="font-size: 11px; color: #ff4d94;">تواصل لتفعيل حسابك أو لطلب نسخة خاصة بك</p>
+    </div>
+</div>
 
-    <div class="search-container">
-        <div class="input-group">
-            <input type="text" id="searchInput" class="form-control search-input" placeholder="ابحث عن هديتك المفضلة..." onkeyup="searchProducts()">
+<div id="admin-content" class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>لوحة تحكم SAIKO Store</h2>
+        <button class="btn btn-outline-light btn-sm" onclick="logout()">خروج</button>
+    </div>
+
+    <div class="admin-card">
+        <h4>إضافة منتج جديد ✨</h4>
+        <div class="row g-3">
+            <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
+            <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
+            <div class="col-12">
+                <label class="mb-2">صور المنتج:</label>
+                <div id="drop-area" onclick="document.getElementById('p-files').click()">
+                    <i class="fas fa-images fa-2x mb-2" style="color: #ff4d94;"></i>
+                    <p class="mb-0">اضغط هنا أو اسحب الصور لرفعها</p>
+                    <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
+                </div>
+                <div id="preview-container" class="preview-container"></div>
+            </div>
+            <div id="upload-status">جاري رفع الصور لسايكو ستور... ⏳</div>
+            <button class="btn btn-primary mt-3" onclick="addProduct()">إضافة للمتجر الآن 🚀</button>
         </div>
     </div>
 
-    <div id="products-list" class="row mt-2 justify-content-center">
+    <div class="admin-card">
+        <h4>المنتجات الحالية 📦</h4>
+        <input type="text" id="admin-search" class="form-control mb-3" placeholder="ابحث باسم المنتج..." onkeyup="filterProducts()">
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>تفاعل</th><th>حذف</th></tr></thead>
+                <tbody id="product-list"></tbody>
+            </table>
         </div>
+    </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
@@ -64,75 +101,102 @@
         appId: "1:470812703135:web:ee2359353b3ad64b36a5aa"
     };
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    function searchProducts() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let cards = document.getElementsByClassName('product-col');
-        for (let i = 0; i < cards.length; i++) {
-            let name = cards[i].getAttribute('data-name').toLowerCase();
-            cards[i].style.display = name.includes(input) ? "" : "none";
+    let selectedFiles = [];
+
+    function showToast(msg, color) {
+        Toastify({ text: msg, duration: 3000, gravity: "top", position: "center", style: { background: color, borderRadius: "10px" } }).showToast();
+    }
+
+    function handleFiles(files) {
+        selectedFiles = [...selectedFiles, ...Array.from(files)];
+        renderPreview();
+    }
+
+    function renderPreview() {
+        const container = document.getElementById('preview-container');
+        container.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImage(${index})">×</button>`;
+                container.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeImage(index) { selectedFiles.splice(index, 1); renderPreview(); }
+
+    async function login() {
+        try {
+            await auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            showToast("مرحباً بك في إدارة سايكو 👋", "#25d366");
+            loadProducts();
+        } catch (e) { showToast("بيانات الدخول خطأ ❌", "#ff4d4d"); }
+    }
+
+    async function addProduct() {
+        const name = document.getElementById('p-name').value;
+        const price = document.getElementById('p-price').value;
+        const status = document.getElementById('upload-status');
+        if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات واختار الصور! ⚠️", "#ff9800");
+        status.style.display = 'block';
+        let urls = [];
+        try {
+            for (let file of selectedFiles) {
+                let fd = new FormData(); fd.append('image', file);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=Ff535d677000fe55d5f463ccfdadc283`, { method: 'POST', body: fd });
+                const data = await res.json();
+                urls.push(data.data.url);
+            }
+            // إضافة المنتج مع عداد تفاعل يبدأ من صفر
+            await db.collection("gifts").add({ 
+                name, price, images: urls, likes: 0, dislikes: 0, createdAt: new Date() 
+            });
+            status.style.display = 'none';
+            showToast("تم إضافة المنتج بنجاح ✅", "#25d366");
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            selectedFiles = []; renderPreview();
+        } catch (e) { status.style.display = 'none'; showToast("فشل الرفع ❌", "#ff4d4d"); }
+    }
+
+    function filterProducts() {
+        let input = document.getElementById('admin-search').value.toLowerCase();
+        let rows = document.getElementById('product-list').getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            let name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+            rows[i].style.display = name.includes(input) ? "" : "none";
         }
     }
 
-    async function handleReaction(id, type) {
-        const docRef = db.collection("gifts").doc(id);
-        await docRef.update({
-            [type]: firebase.firestore.FieldValue.increment(1)
+    function loadProducts() {
+        db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
+                list.innerHTML += `<tr>
+                    <td><img src="${mainImg}" class="table-img"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price} ج.م</td>
+                    <td>👍 ${p.likes || 0} | 👎 ${p.dislikes || 0}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')">حذف</button></td>
+                </tr>`;
+            });
         });
     }
 
-    db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
-        const list = document.getElementById('products-list');
-        list.innerHTML = '';
-        snap.forEach(doc => {
-            const data = doc.data();
-            const imgs = data.images || (data.image ? [data.image] : []);
-            const likes = data.likes || 0;
-            const dislikes = data.dislikes || 0;
-            
-            let carouselId = `slide-${doc.id}`;
-            let carouselItems = imgs.map((url, i) => `
-                <div class="carousel-item ${i === 0 ? 'active' : ''}">
-                    <img src="${url}" class="d-block w-100" onerror="this.src='https://via.placeholder.com/350x350?text=جاري+تحميل+الصورة'">
-                </div>`).join('');
-            
-            list.innerHTML += `
-                <div class="col-lg-4 col-md-6 col-11 product-col" data-name="${data.name}">
-                    <div class="gift-card text-center">
-                        <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">${carouselItems}</div>
-                            ${imgs.length > 1 ? `
-                            <button class="carousel-control-prev" data-bs-target="#${carouselId}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-                            <button class="carousel-control-next" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
-                            ` : ''}
-                        </div>
-                        <h3 class="mt-3" style="font-weight:700;">${data.name}</h3>
-                        
-                        <div class="d-flex justify-content-center gap-3 my-2">
-                            <button onclick="handleReaction('${doc.id}', 'likes')" class="reaction-btn btn-like">
-                                <i class="fas fa-thumbs-up text-success"></i> ${likes}
-                            </button>
-                            <button onclick="handleReaction('${doc.id}', 'dislikes')" class="reaction-btn btn-dislike">
-                                <i class="fas fa-thumbs-down text-danger"></i> ${dislikes}
-                            </button>
-                        </div>
-
-                        <p class="price">${data.price} ج.م</p>
-                        <a href="https://wa.me/201553179352?text=أهلاً سايكو، أريد طلب: ${data.name}" class="btn btn-wa w-100 py-2">
-                            <i class="fab fa-whatsapp"></i> اطلب الآن عبر واتساب
-                        </a>
-                    </div>
-                </div>`;
-        });
-    });
-
-    setInterval(() => {
-        const h = document.createElement('div'); h.className = 'heart'; h.innerHTML = '🎀';
-        h.style.left = Math.random() * 100 + 'vw'; h.style.animationDuration = Math.random() * 3 + 2 + 's';
-        document.body.appendChild(h); setTimeout(() => h.remove(), 5000);
-    }, 500);
+    async function deleteItem(id) { if(confirm("حذف هذا المنتج؟")) await db.collection("gifts").doc(id).delete(); }
+    function logout() { auth.signOut(); location.reload(); }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
