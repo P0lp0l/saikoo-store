@@ -15,15 +15,15 @@
         .form-control { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
         .btn-primary { background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; border-radius: 12px; padding: 12px; font-weight: bold; width: 100%; transition: 0.3s; }
         
-        /* منطقة الرفع الجديدة */
-        #drop-area { border: 2px dashed #ff4d94; border-radius: 15px; background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; padding: 20px; }
-        #drop-area:hover { background: rgba(255, 77, 148, 0.1); }
-        
-        /* تصميم معاينة الصور */
+        /* زرار تواصل مع المصمم سايكو */
+        .btn-designer { border: 2px solid #00d4ff; color: #00d4ff; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn-designer:hover { background: rgba(0, 212, 255, 0.1); color: white; transform: scale(1.02); }
+
+        #drop-area { border: 2px dashed #ff4d94; border-radius: 15px; background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; padding: 20px; text-align: center; }
         .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .preview-item { position: relative; width: 80px; height: 80px; }
         .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d94; }
-        .remove-img { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .remove-img { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
         .table { color: white; vertical-align: middle; }
         .table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
@@ -38,6 +38,17 @@
     <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني">
     <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور">
     <button class="btn btn-primary mt-3" onclick="login()">دخول الآن</button>
+    
+    <div class="text-center mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
+        <h5 style="color: #00d4ff; font-weight: bold;">عايز موقع احترافي لبراندك؟ 🚀</h5>
+        <p class="small text-white-50 px-2 mb-3">بصمم لك متجر إلكتروني متكامل، صفحات هبوط (Landing Pages) جذابة، ولوحات تحكم ذكية لإدارة شغلك زي اللي قدامك دي بالظبط!</p>
+        
+        <a href="https://wa.me/201553179352?text=أهلاً%20سايكو،%20كنت%20عايز%20استفسر%20عن%20تصميم%20موقع%20جديد" target="_blank" class="btn-designer">
+            <i class="fab fa-whatsapp me-2"></i>
+            تواصل مع المصمم SAIKO 💬
+        </a>
+        <p class="mt-2" style="font-size: 11px; color: #ff4d94;">تواصل لتفعيل حسابك أو لطلب نسخة خاصة بك</p>
+    </div>
 </div>
 
 <div id="admin-content" class="container">
@@ -51,18 +62,16 @@
         <div class="row g-3">
             <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
             <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
-            
             <div class="col-12">
                 <label class="mb-2">صور المنتج (اختر صورة أو أكثر):</label>
                 <div id="drop-area" onclick="document.getElementById('p-files').click()">
                     <i class="fas fa-images fa-2x mb-2" style="color: #ff4d94;"></i>
-                    <p class="mb-0">اضغط هنا لاختيار الصور من الاستوديو</p>
+                    <p class="mb-0">اضغط هنا أو اسحب الصور لرفعها</p>
                     <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
                 </div>
                 <div id="preview-container" class="preview-container"></div>
                 <p id="img-counter" class="small mt-2 text-info"></p>
             </div>
-
             <div id="upload-status">جاري رفع الصور لسايكو ستور... ⏳</div>
             <button class="btn btn-primary mt-3" onclick="addProduct()">إضافة للمتجر الآن 🚀</button>
         </div>
@@ -97,38 +106,31 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let selectedFiles = []; // لتخزين الصور المختارة فعلياً
+    let selectedFiles = [];
 
     function showToast(msg, color) {
         Toastify({ text: msg, duration: 3000, gravity: "top", position: "center", style: { background: color, borderRadius: "10px" } }).showToast();
     }
 
-    // التعامل مع اختيار الصور والمعاينة
     function handleFiles(files) {
-        const arr = Array.from(files);
-        selectedFiles = [...selectedFiles, ...arr];
+        selectedFiles = [...selectedFiles, ...Array.from(files)];
         renderPreview();
     }
 
     function renderPreview() {
         const container = document.getElementById('preview-container');
-        const counter = document.getElementById('img-counter');
         container.innerHTML = '';
-        
         selectedFiles.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const div = document.createElement('div');
                 div.className = 'preview-item';
-                div.innerHTML = `
-                    <img src="${e.target.result}">
-                    <button class="remove-img" onclick="removeImage(${index})"><i class="fas fa-times"></i></button>
-                `;
+                div.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImage(${index})">×</button>`;
                 container.appendChild(div);
             };
             reader.readAsDataURL(file);
         });
-        counter.innerText = selectedFiles.length > 0 ? `تم اختيار ${selectedFiles.length} صور` : "";
+        document.getElementById('img-counter').innerText = selectedFiles.length > 0 ? `تم اختيار ${selectedFiles.length} صور` : "";
     }
 
     function removeImage(index) {
@@ -150,25 +152,19 @@
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
         const status = document.getElementById('upload-status');
-        const apiKey = 'Ff535d677000fe55d5f463ccfdadc283';
-
         if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات واختار الصور! ⚠️", "#ff9800");
-
         status.style.display = 'block';
         let urls = [];
-
         try {
             for (let file of selectedFiles) {
                 let fd = new FormData(); fd.append('image', file);
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, { method: 'POST', body: fd });
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=Ff535d677000fe55d5f463ccfdadc283`, { method: 'POST', body: fd });
                 const data = await res.json();
                 urls.push(data.data.url);
             }
             await db.collection("gifts").add({ name, price, images: urls, createdAt: new Date() });
             status.style.display = 'none';
             showToast("تم إضافة المنتج لسايكو بنجاح ✅", "#25d366");
-            
-            // تصفير البيانات
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
             selectedFiles = [];
@@ -183,17 +179,12 @@
             snap.forEach(doc => {
                 const p = doc.data();
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
-                list.innerHTML += `<tr>
-                    <td><img src="${mainImg}" class="table-img"></td>
-                    <td>${p.name}</td>
-                    <td>${p.price} ج.م</td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')">حذف</button></td>
-                </tr>`;
+                list.innerHTML += `<tr><td><img src="${mainImg}" class="table-img"></td><td>${p.name}</td><td>${p.price} ج.م</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')">حذف</button></td></tr>`;
             });
         });
     }
 
-    async function deleteItem(id) { if(confirm("هل أنت متأكد من حذف هذا المنتج من متجر سايكو؟")) await db.collection("gifts").doc(id).delete(); }
+    async function deleteItem(id) { if(confirm("هل أنت متأكد من حذف المنتج من متجر سايكو؟")) await db.collection("gifts").doc(id).delete(); }
     function logout() { auth.signOut(); location.reload(); }
 </script>
 </body>
