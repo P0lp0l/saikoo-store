@@ -14,21 +14,18 @@
         h2, h4 { color: #ff4d94; font-weight: 700; text-shadow: 0 0 10px rgba(255, 77, 148, 0.5); }
         .form-control { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
         .btn-primary { background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; border-radius: 12px; padding: 12px; font-weight: bold; width: 100%; transition: 0.3s; }
-        
-        /* زرار تواصل مع المصمم سايكو */
         .btn-designer { border: 2px solid #00d4ff; color: #00d4ff; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; transition: 0.3s; text-decoration: none; display: inline-block; }
         .btn-designer:hover { background: rgba(0, 212, 255, 0.1); color: white; transform: scale(1.02); }
-
         #drop-area { border: 2px dashed #ff4d94; border-radius: 15px; background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; padding: 20px; text-align: center; }
         .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .preview-item { position: relative; width: 80px; height: 80px; }
         .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d94; }
         .remove-img { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
         .table { color: white; vertical-align: middle; }
         .table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
         #admin-content { display: none; }
         #upload-status { color: #00d4ff; display: none; font-weight: bold; text-align: center; margin-top: 10px; }
+        .search-box { border: 2px solid #00d4ff !important; background: rgba(0, 212, 255, 0.1) !important; color: white !important; }
     </style>
 </head>
 <body>
@@ -38,16 +35,11 @@
     <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني">
     <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور">
     <button class="btn btn-primary mt-3" onclick="login()">دخول الآن</button>
-    
     <div class="text-center mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
         <h5 style="color: #00d4ff; font-weight: bold;">عايز موقع احترافي لبراندك؟ 🚀</h5>
-        <p class="small text-white-50 px-2 mb-3">بصمم لك متجر إلكتروني متكامل، صفحات هبوط (Landing Pages) جذابة، ولوحات تحكم ذكية لإدارة شغلك زي اللي قدامك دي بالظبط!</p>
-        
-        <a href="https://wa.me/201553179352?text=أهلاً%20سايكو،%20كنت%20عايز%20استفسر%20عن%20تصميم%20موقع%20جديد" target="_blank" class="btn-designer">
-            <i class="fab fa-whatsapp me-2"></i>
-            تواصل مع المصمم SAIKO 💬
+        <a href="https://wa.me/201553179352?text=أهلاً سايكو، كنت عايز استفسر عن تصميم موقع جديد" target="_blank" class="btn-designer">
+            <i class="fab fa-whatsapp me-2"></i> تواصل مع المصمم SAIKO 💬
         </a>
-        <p class="mt-2" style="font-size: 11px; color: #ff4d94;">تواصل لتفعيل حسابك أو لطلب نسخة خاصة بك</p>
     </div>
 </div>
 
@@ -63,14 +55,12 @@
             <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
             <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
             <div class="col-12">
-                <label class="mb-2">صور المنتج (اختر صورة أو أكثر):</label>
                 <div id="drop-area" onclick="document.getElementById('p-files').click()">
                     <i class="fas fa-images fa-2x mb-2" style="color: #ff4d94;"></i>
-                    <p class="mb-0">اضغط هنا أو اسحب الصور لرفعها</p>
+                    <p class="mb-0">اضغط هنا لرفع الصور</p>
                     <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
                 </div>
                 <div id="preview-container" class="preview-container"></div>
-                <p id="img-counter" class="small mt-2 text-info"></p>
             </div>
             <div id="upload-status">جاري رفع الصور لسايكو ستور... ⏳</div>
             <button class="btn btn-primary mt-3" onclick="addProduct()">إضافة للمتجر الآن 🚀</button>
@@ -78,10 +68,21 @@
     </div>
 
     <div class="admin-card">
-        <h4>المنتجات الحالية</h4>
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+            <h4>المنتجات الحالية</h4>
+            <input type="text" id="admin-search" class="form-control search-box" style="max-width: 300px;" placeholder="بحث باسم المنتج..." onkeyup="filterProducts()">
+        </div>
         <div class="table-responsive">
             <table class="table">
-                <thead><tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>حذف</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>الصورة</th>
+                        <th>الاسم</th>
+                        <th>السعر</th>
+                        <th>التفاعل 👍/👎</th>
+                        <th>حذف</th>
+                    </tr>
+                </thead>
                 <tbody id="product-list"></tbody>
             </table>
         </div>
@@ -130,20 +131,15 @@
             };
             reader.readAsDataURL(file);
         });
-        document.getElementById('img-counter').innerText = selectedFiles.length > 0 ? `تم اختيار ${selectedFiles.length} صور` : "";
     }
 
-    function removeImage(index) {
-        selectedFiles.splice(index, 1);
-        renderPreview();
-    }
+    function removeImage(index) { selectedFiles.splice(index, 1); renderPreview(); }
 
     async function login() {
         try {
             await auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value);
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('admin-content').style.display = 'block';
-            showToast("مرحباً بك في إدارة سايكو 👋", "#25d366");
             loadProducts();
         } catch (e) { showToast("بيانات الدخول خطأ ❌", "#ff4d4d"); }
     }
@@ -152,7 +148,7 @@
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
         const status = document.getElementById('upload-status');
-        if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات واختار الصور! ⚠️", "#ff9800");
+        if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات! ⚠️", "#ff9800");
         status.style.display = 'block';
         let urls = [];
         try {
@@ -162,14 +158,26 @@
                 const data = await res.json();
                 urls.push(data.data.url);
             }
-            await db.collection("gifts").add({ name, price, images: urls, createdAt: new Date() });
+            // إضافة المنتج مع عدادات التفاعل
+            await db.collection("gifts").add({ 
+                name, price, images: urls, likes: 0, dislikes: 0, createdAt: new Date() 
+            });
             status.style.display = 'none';
-            showToast("تم إضافة المنتج لسايكو بنجاح ✅", "#25d366");
+            showToast("تمت الإضافة لسايكو بنجاح ✅", "#25d366");
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
-            selectedFiles = [];
-            renderPreview();
+            selectedFiles = []; renderPreview();
         } catch (e) { status.style.display = 'none'; showToast("فشل الرفع ❌", "#ff4d4d"); }
+    }
+
+    // دالة البحث الذكي
+    function filterProducts() {
+        let input = document.getElementById('admin-search').value.toLowerCase();
+        let rows = document.getElementById('product-list').getElementsByTagName('tr');
+        for (let row of rows) {
+            let name = row.getElementsByTagName('td')[1].innerText.toLowerCase();
+            row.style.display = name.includes(input) ? "" : "none";
+        }
     }
 
     function loadProducts() {
@@ -179,12 +187,21 @@
             snap.forEach(doc => {
                 const p = doc.data();
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
-                list.innerHTML += `<tr><td><img src="${mainImg}" class="table-img"></td><td>${p.name}</td><td>${p.price} ج.م</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')">حذف</button></td></tr>`;
+                list.innerHTML += `<tr>
+                    <td><img src="${mainImg}" class="table-img"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price} ج.م</td>
+                    <td style="font-weight: bold;">
+                        <span class="text-success">👍 ${p.likes || 0}</span> | 
+                        <span class="text-danger">👎 ${p.dislikes || 0}</span>
+                    </td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')">حذف</button></td>
+                </tr>`;
             });
         });
     }
 
-    async function deleteItem(id) { if(confirm("هل أنت متأكد من حذف المنتج من متجر سايكو؟")) await db.collection("gifts").doc(id).delete(); }
+    async function deleteItem(id) { if(confirm("حذف المنتج نهائياً؟")) await db.collection("gifts").doc(id).delete(); }
     function logout() { auth.signOut(); location.reload(); }
 </script>
 </body>
