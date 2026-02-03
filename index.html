@@ -9,9 +9,15 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
         body { background: #0f0c29; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-        .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; }
+        
+        /* كارت المنتج */
+        .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; transition: 0.3s; }
         .carousel-item img { height: 350px; object-fit: cover; border-radius: 15px; width: 100%; background: #24243e; }
         
+        /* البحث */
+        .search-box { max-width: 500px; margin: 0 auto 30px; }
+        .search-input { background: rgba(255,255,255,0.1); border: 2px solid #00d4ff; color: white; border-radius: 50px; padding: 12px; text-align: center; }
+
         /* نظام التفاعل بالكلمات المضيئة */
         .reaction-container { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
         .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; user-select: none; }
@@ -21,35 +27,47 @@
         .active-like .vote-text { color: #28a745 !important; text-shadow: 0 0 15px #28a745, 0 0 25px #28a745; }
         .active-dislike .vote-text { color: #dc3545 !important; text-shadow: 0 0 15px #dc3545, 0 0 25px #dc3545; }
 
-        .comments-area { background: rgba(255, 255, 255, 0.25) !important; border-radius: 15px; padding: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto; border: 1px solid #00d4ff; }
-        .comment-item { background: #1a1a3a; padding: 10px; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        /* منطقة التعليقات */
+        .comments-area { 
+            background: rgba(255, 255, 255, 0.25) !important; 
+            border-radius: 15px; padding: 12px; margin-top: 15px; 
+            max-height: 250px; overflow-y: auto; text-align: right; border: 1px solid #00d4ff;
+        }
+        .comment-item { 
+            background: #1a1a3a; padding: 10px; border-radius: 12px; 
+            margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.15); position: relative;
+        }
+        .comment-text { font-size: 0.95rem; color: #fff !important; line-height: 1.4; }
         .del-btn { color: #ff4d4d; font-size: 0.75rem; cursor: pointer; float: left; font-weight: bold; border: none; background: none; }
-        
+
+        /* خانة الإدخال */
         .comment-input-group { display: flex; gap: 8px; margin-top: 12px; }
         .comment-field { background: rgba(255,255,255,0.1); border: 2px solid #00d4ff; color: white; border-radius: 20px; padding: 8px 15px; flex-grow: 1; outline: none; }
-        .send-btn { background: #00d4ff; border: none; border-radius: 50%; width: 40px; height: 40px; color: #0f0c29; }
+        .send-btn { background: #00d4ff; border: none; border-radius: 50%; width: 40px; height: 40px; color: #0f0c29; display: flex; align-items: center; justify-content: center; }
+
+        .price { color: #ff4d94; font-size: 1.6rem; font-weight: bold; margin-bottom: 15px; }
+        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; width: 100%; text-align: center; }
         
-        .price { color: #ff4d94; font-size: 1.6rem; font-weight: bold; }
-        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; text-align: center; }
-        
-        /* Footer اللوجو برابط مباشر */
+        /* Footer اللوجو */
         footer { border-top: 1px solid rgba(255, 77, 148, 0.3); }
         .footer-logo { width: 120px; height: auto; filter: drop-shadow(0 0 10px #ff4d4d); transition: 0.3s; }
-        .footer-logo:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
 <div class="container py-5 text-center">
-    <h1 class="display-4 mb-4" style="color:#00d4ff; font-weight:700;">SAIKO Store</h1>
-    <div id="products-list" class="row justify-content-center"></div>
+    <h1 class="display-4 mb-2" style="font-weight:700; color:#00d4ff;">SAIKO Store</h1>
+    <div class="search-box">
+        <input type="text" id="searchInput" class="form-control search-input" placeholder="🔍 ابحث عن هديتك..." onkeyup="filterItems()">
+    </div>
+    <div id="products-list" class="row mt-2 justify-content-center"></div>
 </div>
 
 <footer class="text-center py-5 mt-5">
-    <img src="https://i.ibb.co/LdrpM2f/1000184328.png" alt="SAIKO Logo" class="footer-logo">
+    <img src="1000184328.png" alt="SAIKO Logo" class="footer-logo">
     <p class="mt-3" style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">
         &copy; 2026 SAIKO Store <br>
-        <span style="font-size: 0.7rem; letter-spacing: 1px;">صنع بكل حب لعشاق التميز 🦅</span>
+        <span style="font-size: 0.7rem;">صنع بكل حب لعشاق التميز 🦅</span>
     </p>
 </footer>
 
@@ -71,11 +89,13 @@
         localStorage.setItem('saiko_user_id', 'u_' + Math.random().toString(36).substr(2, 9));
     }
 
+    // دالة التفاعل (أعجبني/لم يعجبني)
     async function handleVote(id, type) {
         const key = `voted_${id}`;
         const lastAction = localStorage.getItem(key);
         const docRef = db.collection("gifts").doc(id);
         const batch = db.batch();
+
         if (lastAction === type) {
             batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(-1) });
             localStorage.removeItem(key);
@@ -89,6 +109,7 @@
         await batch.commit();
     }
 
+    // جلب المنتجات
     db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
         const list = document.getElementById('products-list');
         list.innerHTML = '';
@@ -100,7 +121,7 @@
             let carouselItems = imgs.map((url, i) => `<div class="carousel-item ${i === 0 ? 'active' : ''}"><img src="${url}"></div>`).join('');
 
             list.innerHTML += `
-                <div class="col-lg-4 col-md-6 col-11 mb-4">
+                <div class="col-lg-4 col-md-6 col-11 product-col" data-name="${data.name}">
                     <div class="gift-card">
                         <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">${carouselItems}</div>
@@ -121,7 +142,7 @@
 
                         <p class="price">${data.price} ج.م</p>
                         <a href="https://wa.me/201289984200?text=طلب: ${data.name}" class="btn-wa">طلب عبر واتساب</a>
-                        <div class="comments-area" id="box-${doc.id}"><small style="color:#00d4ff">جاري تحميل التعليقات...</small></div>
+                        <div class="comments-area" id="box-${doc.id}"><small style="color:#00d4ff">جاري التحميل...</small></div>
                         <div class="comment-input-group">
                             <input type="text" id="inp-${doc.id}" class="comment-field" placeholder="اكتب تعليقاً...">
                             <button onclick="addComment('${doc.id}')" class="send-btn"><i class="fas fa-paper-plane"></i></button>
@@ -140,7 +161,11 @@
             const myId = localStorage.getItem('saiko_user_id');
             snap.forEach(cDoc => {
                 const c = cDoc.data();
-                area.innerHTML += `<div class="comment-item">${c.userId === myId ? `<button onclick="deleteComment('${id}', '${cDoc.id}')" class="del-btn">حذف</button>` : ''}<div class="comment-text">${c.text}</div></div>`;
+                area.innerHTML += `
+                    <div class="comment-item">
+                        ${c.userId === myId ? `<button onclick="deleteComment('${id}', '${cDoc.id}')" class="del-btn">حذف</button>` : ''}
+                        <div class="comment-text">${c.text}</div>
+                    </div>`;
             });
         });
     }
@@ -148,12 +173,25 @@
     async function addComment(id) {
         const inp = document.getElementById(`inp-${id}`);
         if(!inp.value.trim()) return;
-        await db.collection("gifts").doc(id).collection("comments").add({ text: inp.value, userId: localStorage.getItem('saiko_user_id'), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await db.collection("gifts").doc(id).collection("comments").add({
+            text: inp.value,
+            userId: localStorage.getItem('saiko_user_id'),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
         inp.value = '';
     }
 
     async function deleteComment(pId, cId) {
         if(confirm("حذف تعليقك؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
+    }
+
+    function filterItems() {
+        let val = document.getElementById('searchInput').value.toLowerCase();
+        let items = document.getElementsByClassName('product-col');
+        for (let item of items) {
+            let name = item.getAttribute('data-name').toLowerCase();
+            item.style.display = name.includes(val) ? "" : "none";
+        }
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
