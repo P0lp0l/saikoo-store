@@ -64,7 +64,6 @@
             border-radius: 15px; margin-top: 20px; font-size: 0.85rem;
         }
 
-        /* التوقيع */
         .signature {
             text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.5);
             margin-top: 30px; letter-spacing: 1px;
@@ -186,7 +185,6 @@
         Toastify({ text: msg, duration: 2000, style: { background: "#ff4d94" } }).showToast();
     }
 
-    // تذكرني والدخول
     auth.onAuthStateChanged(user => {
         document.getElementById('login-section').style.display = user ? 'none' : 'block';
         document.getElementById('admin-content').style.display = user ? 'block' : 'none';
@@ -197,10 +195,7 @@
         const e = document.getElementById('login-email').value;
         const p = document.getElementById('login-password').value;
         const rem = document.getElementById('rememberMe').checked;
-        
-        // ضبط استمرار الجلسة بناءً على "تذكرني"
         const persistence = rem ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
-        
         try { 
             await auth.setPersistence(persistence);
             await auth.signInWithEmailAndPassword(e, p); 
@@ -209,7 +204,6 @@
 
     function logout() { auth.signOut(); }
 
-    // التحكم بالبيانات
     function loadProducts() {
         db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
             const list = document.getElementById('product-list');
@@ -255,7 +249,6 @@
         });
     }
 
-    // العمليات الشاملة (Bulk)
     async function bulkToggleComments(shouldDisable) {
         Swal.fire({ title: 'تأكيد العملية؟', icon: 'question', showCancelButton: true }).then(async (result) => {
             if (result.isConfirmed) {
@@ -299,17 +292,17 @@
     async function toggleComments(id, cur) { await db.collection("gifts").doc(id).update({ commentsDisabled: !cur }); }
 
     function loadVisitorStats() {
-        const yStr = new Date().toISOString().substring(0, 4);
+        const yStr = new Date().getFullYear().toString();
         db.collection("stats").doc("yearly").collection("years").doc(yStr).onSnapshot(d => {
-            document.getElementById('total-v-all').innerText = d.exists ? d.data().count : 0;
+            document.getElementById('total-v-all').innerText = d.exists ? (d.data().count || 0) : 0;
         });
     }
 
     async function resetStats() {
         Swal.fire({ title: 'تصفير الزوار؟', icon: 'warning', showCancelButton: true }).then(async (r) => {
             if(r.isConfirmed) {
-                const yStr = new Date().toISOString().substring(0, 4);
-                await db.collection("stats").doc("yearly").collection("years").doc(yStr).delete();
+                const yStr = new Date().getFullYear().toString();
+                await db.collection("stats").doc("yearly").collection("years").doc(yStr).set({ count: 0 });
                 saikoToast("تم التصفير 🔄");
             }
         });
@@ -344,3 +337,4 @@
 </script>
 </body>
 </html>
+
