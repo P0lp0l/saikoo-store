@@ -3,199 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة سايكو ستور | Premium Admin 🚀</title>
+    <title>إدارة سايكو ستور | Premium Admin 💎</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         
-        /* خلفية متحركة احترافية وهادئة */
+        /* 1. الخلفية المتحركة (ألوان منسقة وحركة واضحة) */
         body { 
             font-family: 'Cairo', sans-serif; 
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #0f0c29);
+            background: linear-gradient(-45deg, #050505, #120d2b, #1a1a2e, #050505);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: elegantGradient 12s ease infinite;
             background-attachment: fixed;
             color: #ffffff; min-height: 100vh; padding: 20px; margin: 0;
-            overflow-x: hidden;
         }
 
-        @keyframes gradientBG {
+        @keyframes elegantGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* كروت بتصميم زجاجي احترافي */
+        /* 2. الخطوط (وضوح عالي جداً مع ظل أسود) */
+        h1, h2, h3, h4, .fw-bold, th { 
+            color: #ffffff !important; 
+            font-weight: 900 !important; 
+            text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.9); 
+        }
+        
+        p, label, td, span { 
+            color: #f8f9fa !important; 
+            font-weight: 700 !important; 
+            text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 3. الكروت (تصميم زجاجي احترافي) */
         .glass-card { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(20px); 
-            border-radius: 25px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 25px; margin-bottom: 25px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: 0.3s ease;
-        }
-
-        .section-title {
-            border-right: 5px solid #ff4d94;
-            padding-right: 15px;
-            margin-bottom: 25px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 77, 148, 0.5);
-        }
-
-        /* تحسين شكل الجدول ليكون أكثر حداثة */
-        .modern-table {
-            border-collapse: separate;
-            border-spacing: 0 12px;
-            width: 100%;
-        }
-        .modern-table tr {
-            background: rgba(255, 255, 255, 0.03);
-            transition: 0.3s;
-        }
-        .modern-table tr:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: scale(1.005);
-        }
-        .modern-table th { padding: 15px; border: none; color: #ff4d94; font-weight: 700; }
-        .modern-table td { padding: 15px; border: none; vertical-align: middle; }
-        .modern-table td:first-child { border-radius: 0 15px 15px 0; }
-        .modern-table td:last-child { border-radius: 15px 0 0 15px; }
-
-        .prod-img { width: 65px; height: 65px; object-fit: cover; border-radius: 15px; border: 2px solid #ff4d94; }
-
-        /* ستايل المدخلات */
-        .form-control { 
-            background: rgba(0, 0, 0, 0.2) !important; 
+            background: rgba(0, 0, 0, 0.55); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
             border: 1px solid rgba(255, 255, 255, 0.15); 
-            color: #fff !important; 
-            border-radius: 12px; padding: 12px; transition: 0.3s;
-        }
-        .form-control:focus {
-            border-color: #ff4d94;
-            box-shadow: 0 0 15px rgba(255, 77, 148, 0.3);
-            background: rgba(0, 0, 0, 0.4) !important;
+            padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        /* ستايل التعليقات المطور */
-        .comment-item-admin {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-right: 3px solid #00d4ff;
+        .stat-box { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px; padding: 20px; 
         }
-        .comment-item-admin.is-pinned { border-right-color: #ff4d94; background: rgba(255, 77, 148, 0.1); }
+        .stat-box h2 { color: #ff4d94 !important; font-size: 2.8rem; }
 
-        /* تصميم الأزرار */
+        /* 4. المدخلات (بيضاء صريحة لتسهيل القراءة) */
+        .form-control { 
+            background: #ffffff !important; 
+            color: #000000 !important; 
+            font-weight: 700 !important;
+            border: 2px solid #ff4d94;
+            border-radius: 10px; padding: 12px;
+        }
+
         .btn-saiko {
             background: linear-gradient(45deg, #ff4d94, #ff758c);
-            border: none; border-radius: 12px; padding: 12px 25px;
-            font-weight: 700; color: white; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4);
+            color: #fff !important; font-size: 1.2rem; font-weight: 900;
+            border: none; border-radius: 12px; padding: 12px;
+            box-shadow: 0 5px 15px rgba(255, 77, 148, 0.4);
+            transition: 0.3s; width: 100%;
         }
-        .btn-saiko:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 77, 148, 0.6); }
+        .btn-saiko:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 77, 148, 0.6); }
 
-        .btn-delete { color: #ff4d4d; background: none; border: none; font-size: 1.2rem; transition: 0.2s; }
-        .btn-delete:hover { color: #ff0000; transform: scale(1.2); }
+        /* 5. إدارة المنتجات والتعليقات */
+        .modern-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        .modern-table tr { background: rgba(255, 255, 255, 0.03); }
+        .modern-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .prod-img { width: 70px; height: 70px; border-radius: 12px; border: 2px solid #ff4d94; object-fit: cover; }
 
-        /* ستايل Toastify المخصص لسايكو */
-        .saiko-toast {
-            border-radius: 15px !important;
-            padding: 15px 25px !important;
-            font-family: 'Cairo', sans-serif !important;
-            font-weight: bold !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-            backdrop-filter: blur(10px);
+        .admin-comment-box { 
+            background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 8px; 
+            max-height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .comment-item-admin {
+            background: rgba(255, 255, 255, 0.05); border-radius: 8px;
+            padding: 6px 10px; margin-bottom: 5px; font-size: 0.85rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
     </style>
 </head>
 <body>
 
 <div id="login-section" class="glass-card" style="max-width: 450px; margin: 100px auto;">
-    <div class="text-center mb-4">
-        <i class="fas fa-lock fa-3x mb-3" style="color: #ff4d94;"></i>
-        <h2 class="fw-900">إدارة سايكو ستور</h2>
-    </div>
-    <input type="email" id="login-email" class="form-control mb-3" placeholder="البريد الإلكتروني">
-    <input type="password" id="login-password" class="form-control mb-3" placeholder="كلمة المرور">
-    <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" id="remMe" checked>
-        <label class="form-check-label ms-2">تذكر دخولي</label>
-    </div>
-    <button class="btn-saiko w-100" onclick="login()">دخول الإدارة 🚀</button>
+    <h2 class="text-center mb-4">🔐 دخول إدارة سايكو</h2>
+    <label class="mb-2">البريد الإلكتروني</label>
+    <input type="email" id="login-email" class="form-control mb-3">
+    <label class="mb-2">كلمة المرور</label>
+    <input type="password" id="login-password" class="form-control mb-4">
+    <button class="btn-saiko" onclick="login()">دخول اللوحة</button>
 </div>
 
 <div id="admin-content" class="container" style="display: none;">
-    <div class="d-flex justify-content-between align-items-center mb-5 mt-3">
-        <div>
-            <h1 class="fw-900 mb-0">لوحة التحكم 💎</h1>
-            <p class="text-info mb-0">مرحباً يوسف، جاهز لإدارة المتجر؟</p>
-        </div>
-        <button class="btn btn-outline-light rounded-pill px-4" onclick="logout()">خروج <i class="fas fa-sign-out-alt ms-1"></i></button>
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <h1>لوحة الإدارة 💎</h1>
+        <button class="btn btn-outline-danger fw-bold" onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <div class="row g-4 mb-5">
-        <div class="col-md-6">
-            <div class="glass-card text-center py-4 mb-0">
-                <h5 class="text-info fw-bold">إجمالي المنتجات</h5>
-                <h2 id="total-p" class="fw-900">0</h2>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="glass-card text-center py-4 mb-0">
-                <h5 class="text-success fw-bold">التفاعلات (Likes)</h5>
-                <h2 id="total-likes" class="fw-900">0</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="glass-card mb-5">
-        <h4 class="section-title">إضافة قطعة فنية جديدة ✨</h4>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <input type="text" id="p-name" class="form-control" placeholder="اسم المنتج الفاخر">
-            </div>
-            <div class="col-md-6">
-                <input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)">
-            </div>
-            <div class="col-12 mt-4">
-                <div id="drop-area" onclick="document.getElementById('p-files').click()">
-                    <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #ff4d94;"></i>
-                    <p class="fw-bold mb-0">اسحب الصور هنا أو اضغط للاختيار</p>
-                    <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
-                </div>
-                <div id="preview-container" class="d-flex flex-wrap gap-3 mt-3"></div>
-            </div>
-            <div id="up-status" class="text-center w-100" style="display:none; color:#00d4ff; font-weight:bold;">جاري تحديث قاعدة البيانات... ⏳</div>
-            <div class="col-12 mt-4">
-                <button class="btn-saiko w-100 py-3 fs-5" onclick="addProduct()">نشر المنتج في المتجر الآن 🛍️</button>
-            </div>
-        </div>
+    <div class="row g-4 mb-4 text-center">
+        <div class="col-md-6"><div class="stat-box"><h4>إجمالي المنتجات</h4><h2 id="total-p">0</h2></div></div>
+        <div class="col-md-6"><div class="stat-box"><h4>إجمالي الإعجابات</h4><h2 id="total-likes">0</h2></div></div>
     </div>
 
     <div class="glass-card">
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-            <h4 class="section-title mb-0">إدارة المخزون والتعليقات</h4>
-            <input type="text" id="admin-search" class="form-control" style="max-width: 300px;" placeholder="🔍 بحث عن منتج..." onkeyup="filterProducts()">
+        <h3 class="mb-4 text-info">✨ إضافة منتج جديد</h3>
+        <div class="row g-3">
+            <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
+            <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
+            <div class="col-12 mt-3 text-center">
+                <div style="border: 2px dashed #ff4d94; padding: 30px; border-radius: 15px; cursor: pointer;" onclick="document.getElementById('p-files').click()">
+                    <i class="fas fa-cloud-upload-alt fa-2x mb-2" style="color:#ff4d94;"></i>
+                    <p>ارفع صور المنتج من هنا</p>
+                    <input type="file" id="p-files" hidden multiple onchange="handleFiles(this.files)">
+                </div>
+                <div id="preview-container" class="d-flex flex-wrap gap-2 mt-3 justify-content-center"></div>
+            </div>
+            <button class="btn-saiko mt-4" onclick="addProduct()">نشر المنتج الآن 🔥</button>
         </div>
-        
+    </div>
+
+    <div class="glass-card mt-4">
+        <h3 class="mb-4 text-info">📋 إدارة المنتجات والتعليقات</h3>
+        <input type="text" id="admin-search" class="form-control mb-3" placeholder="🔍 بحث عن منتج..." onkeyup="filterProducts()">
         <div class="table-responsive">
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>المنتج</th>
+                        <th>الصورة والاسم</th>
                         <th>التفاعل</th>
-                        <th style="min-width: 300px;">التعليقات والتحكم</th>
+                        <th style="min-width: 250px;">التعليقات (تثبيت/حذف)</th>
                         <th>حذف</th>
                     </tr>
                 </thead>
@@ -211,37 +158,16 @@
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
-        authDomain: "flafilo-store.firebaseapp.com",
-        projectId: "flafilo-store",
-        storageBucket: "flafilo-store.firebasestorage.app",
-        messagingSenderId: "470812703135",
-        appId: "1:470812703135:web:ee2359353b3ad64b36a5aa"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0", authDomain: "flafilo-store.firebaseapp.com", projectId: "flafilo-store", storageBucket: "flafilo-store.firebasestorage.app", messagingSenderId: "470812703135", appId: "1:470812703135:web:ee2359353b3ad64b36a5aa" };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let selectedFiles = [];
-
-    // نظام التنبيهات الاحترافي
     function saikoToast(msg, isSuccess = true) {
-        Toastify({
-            text: msg,
-            duration: 3500,
-            gravity: "top",
-            position: "center",
-            className: "saiko-toast",
-            style: {
-                background: isSuccess ? "linear-gradient(45deg, #00b09b, #96c93d)" : "linear-gradient(45deg, #ff5f6d, #ffc371)",
-                border: "1px solid rgba(255,255,255,0.2)"
-            }
-        }).showToast();
+        Toastify({ text: msg, duration: 3000, gravity: "top", position: "center", style: { background: isSuccess ? "#25d366" : "#ff4d4d", borderRadius: "10px" } }).showToast();
     }
 
-    // فحص حالة الدخول
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('admin-content').style.display = 'block';
@@ -253,47 +179,35 @@
     });
 
     async function login() {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-password').value;
-        const rem = document.getElementById('remMe').checked;
+        const e = document.getElementById('login-email').value;
+        const p = document.getElementById('login-password').value;
         try {
-            await auth.setPersistence(rem ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-            await auth.signInWithEmailAndPassword(email, pass);
-            saikoToast("أهلاً بعودتك يا ملك الإدارة! 👑");
-        } catch (e) { saikoToast("بيانات الدخول خطأ ❌", false); }
+            await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            await auth.signInWithEmailAndPassword(e, p);
+            saikoToast("مرحباً بك يا مدير سايكو 👑");
+        } catch (e) { saikoToast("خطأ في البيانات ❌", false); }
     }
 
-    function logout() { auth.signOut(); saikoToast("تم تسجيل الخروج بأمان"); }
+    function logout() { auth.signOut(); }
 
+    let selectedFiles = [];
     function handleFiles(files) {
         selectedFiles = [...selectedFiles, ...Array.from(files)];
-        renderPreview();
-    }
-
-    function renderPreview() {
         const container = document.getElementById('preview-container');
         container.innerHTML = '';
-        selectedFiles.forEach((file, index) => {
+        selectedFiles.forEach(file => {
             const reader = new FileReader();
-            reader.onload = (e) => {
-                const div = document.createElement('div');
-                div.className = 'position-relative';
-                div.innerHTML = `<img src="${e.target.result}" class="prod-img"><button onclick="removeImage(${index})" class="btn-delete" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; width:20px; height:20px; font-size:12px; display:flex; align-items:center; justify-content:center;">×</button>`;
-                container.appendChild(div);
-            };
+            reader.onload = (e) => { container.innerHTML += `<img src="${e.target.result}" class="prod-img">`; };
             reader.readAsDataURL(file);
         });
     }
 
-    function removeImage(index) { selectedFiles.splice(index, 1); renderPreview(); }
-
     async function addProduct() {
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
-        const status = document.getElementById('up-status');
-        if(!name || !price || selectedFiles.length === 0) return saikoToast("أكمل البيانات أولاً! ⚠️", false);
+        if(!name || !price || selectedFiles.length === 0) return saikoToast("أكمل البيانات ⚠️", false);
         
-        status.style.display = 'block';
+        saikoToast("جاري رفع الصور... ⏳");
         let urls = [];
         try {
             for (let file of selectedFiles) {
@@ -303,10 +217,9 @@
                 urls.push(data.data.url);
             }
             await db.collection("gifts").add({ name, price, images: urls, likes: 0, dislikes: 0, createdAt: new Date() });
-            status.style.display = 'none';
-            saikoToast("تم نشر المنتج بنجاح! 🎉");
+            saikoToast("تم النشر بنجاح! 🎉");
             location.reload();
-        } catch (e) { status.style.display = 'none'; saikoToast("فشل الرفع ❌", false); }
+        } catch (e) { saikoToast("فشل الرفع ❌", false); }
     }
 
     function loadProducts() {
@@ -318,45 +231,32 @@
             snap.forEach(doc => {
                 const p = doc.data();
                 totalL += (p.likes || 0);
-                const mainImg = (p.images && p.images.length > 0) ? p.images[0] : '';
                 list.innerHTML += `
                     <tr>
-                        <td>
-                            <div class="d-flex align-items-center gap-3">
-                                <img src="${mainImg}" class="prod-img">
-                                <div><b class="fs-5 d-block">${p.name}</b><small class="text-info">${p.price} ج.م</small></div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="text-success"><i class="fas fa-thumbs-up"></i> ${p.likes || 0}</span><br>
-                            <span class="text-danger"><i class="fas fa-thumbs-down"></i> ${p.dislikes || 0}</span>
-                        </td>
-                        <td>
-                            <div class="admin-comment-box" id="comments-${doc.id}">جاري التحميل...</div>
-                        </td>
-                        <td>
-                            <button class="btn-delete" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash-alt"></i></button>
-                        </td>
+                        <td><img src="${p.images[0]}" class="prod-img me-2"> <b>${p.name}</b></td>
+                        <td>👍 ${p.likes || 0} | 👎 ${p.dislikes || 0}</td>
+                        <td><div class="admin-comment-box" id="comments-${doc.id}">تحميل...</div></td>
+                        <td><button class="btn btn-sm btn-danger" onclick="deleteItem('${doc.id}')">حذف</button></td>
                     </tr>`;
-                loadCommentsForAdmin(doc.id);
+                loadComments(doc.id);
             });
             document.getElementById('total-likes').innerText = totalL;
         });
     }
 
-    function loadCommentsForAdmin(productId) {
+    function loadComments(productId) {
         db.collection("gifts").doc(productId).collection("comments").orderBy("createdAt", "desc").onSnapshot(snap => {
-            const container = document.getElementById(`comments-${productId}`);
-            if(!container) return;
-            container.innerHTML = snap.empty ? '<small class="text-muted">لا يوجد تعليقات بعد</small>' : '';
+            const box = document.getElementById(`comments-${productId}`);
+            if(!box) return;
+            box.innerHTML = snap.empty ? '<small>لا تعليقات</small>' : '';
             snap.forEach(cDoc => {
                 const c = cDoc.data();
-                container.innerHTML += `
-                    <div class="comment-item-admin ${c.pinned ? 'is-pinned' : ''}">
-                        <span class="text-truncate" style="max-width:200px;">${c.text}</span>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm p-0 text-warning" onclick="togglePin('${productId}', '${cDoc.id}', ${c.pinned})"><i class="fas fa-thumbtack"></i></button>
-                            <button class="btn btn-sm p-0 text-danger" onclick="deleteComment('${productId}', '${cDoc.id}')"><i class="fas fa-times-circle"></i></button>
+                box.innerHTML += `
+                    <div class="comment-item-admin" style="${c.pinned ? 'border-right: 3px solid #00d4ff;' : ''}">
+                        <span class="text-truncate" style="max-width:150px;">${c.text}</span>
+                        <div>
+                            <i class="fas fa-thumbtack me-2" style="cursor:pointer; color:${c.pinned?'#00d4ff':'#666'}" onclick="togglePin('${productId}','${cDoc.id}',${c.pinned})"></i>
+                            <i class="fas fa-trash text-danger" style="cursor:pointer;" onclick="deleteComment('${productId}','${cDoc.id}')"></i>
                         </div>
                     </div>`;
             });
@@ -365,31 +265,23 @@
 
     async function togglePin(pId, cId, current) {
         await db.collection("gifts").doc(pId).collection("comments").doc(cId).update({ pinned: !current });
-        saikoToast(current ? "تم إلغاء التثبيت" : "تم تثبيت التعليق بنجاح 📌");
+        saikoToast(!current ? "تم التثبيت 📌" : "تم إلغاء التثبيت");
     }
 
     async function deleteComment(pId, cId) {
-        if(confirm("حذف التعليق نهائياً؟")) {
-            await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
-            saikoToast("تم حذف التعليق 🗑️", false);
-        }
+        if(confirm("حذف التعليق؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
     }
 
-    async function deleteItem(id) { 
-        if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-            await db.collection("gifts").doc(id).delete();
-            saikoToast("تم حذف المنتج بنجاح 🗑️", false);
-        }
-    }
+    async function deleteItem(id) { if(confirm("حذف المنتج نهائياً؟")) await db.collection("gifts").doc(id).delete(); }
 
     function filterProducts() {
         let input = document.getElementById('admin-search').value.toLowerCase();
         let rows = document.getElementById('product-list').getElementsByTagName('tr');
         for (let row of rows) {
-            let name = row.getElementsByTagName('td')[0].innerText.toLowerCase();
-            row.style.display = name.includes(input) ? "" : "none";
+            row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
         }
     }
 </script>
 </body>
 </html>
+
