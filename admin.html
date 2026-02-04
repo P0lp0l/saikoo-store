@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
@@ -19,9 +20,7 @@
             background-size: 100% 400%;
             background-attachment: fixed;
             animation: verticalFlow 12s linear infinite;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
+            color: #fff; min-height: 100vh; padding: 20px;
         }
 
         @keyframes verticalFlow {
@@ -30,58 +29,31 @@
             100% { background-position: 50% 0%; }
         }
 
-        /* توضيح الخانات */
         .form-control { 
-            background: rgba(255, 255, 255, 1) !important; 
-            border: 3px solid #ff4d94;
-            color: #000 !important;
-            font-weight: 900;
-            border-radius: 12px;
-            padding: 12px;
+            background: #fff !important; border: 3px solid #ff4d94;
+            color: #000 !important; font-weight: 900; border-radius: 12px; padding: 12px;
         }
 
         .glass-card { 
-            background: rgba(255, 255, 255, 0.15); 
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 25px;
-            margin-bottom: 25px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.15); border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.3); padding: 25px; margin-bottom: 25px;
+            backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .btn-saiko {
-            background: #ff4d94;
-            color: white !important;
-            font-weight: 900;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 30px;
-            box-shadow: 0 5px 15px rgba(255, 77, 148, 0.4);
-            transition: 0.3s;
+            background: #ff4d94; color: white !important; font-weight: 900;
+            border: none; border-radius: 50px; padding: 12px 30px; transition: 0.3s;
         }
 
-        /* ستايل صناديق الإحصائيات المدمجة */
         .stat-box { 
-            background: rgba(0, 0, 0, 0.4); 
-            border-radius: 20px; padding: 20px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 20px; 
+            text-align: center; border: 1px solid rgba(255,255,255,0.2); height: 100%;
         }
         .stat-box h3 { color: #00d4ff; font-weight: 900; margin-bottom: 0; }
         .stat-box small { color: #eee; font-size: 0.85rem; font-weight: bold; }
 
         .table { color: #fff; background: rgba(0,0,0,0.3); border-radius: 15px; }
         .prod-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 2px solid #fff; }
-
-        .marketing-box {
-            text-align: center; padding: 20px; background: rgba(0,0,0,0.5);
-            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-top: 25px;
-        }
-        .btn-wa { 
-            background: #25d366; color: white !important; border-radius: 50px; 
-            padding: 10px 25px; text-decoration: none; font-weight: bold; display: inline-block;
-        }
 
         .comment-item {
             background: rgba(255,255,255,0.1); border-radius: 8px;
@@ -95,40 +67,23 @@
 
 <div id="login-section" class="glass-card" style="max-width: 450px; margin: 60px auto;">
     <h2 class="text-center mb-4" style="font-weight: 900;">لوحة تحكم سايكو 🎈</h2>
-    
     <input type="email" id="login-email" class="form-control mb-3" placeholder="البريد الإلكتروني">
     <input type="password" id="login-password" class="form-control mb-3" placeholder="كلمة المرور">
-    
-    <div class="mb-3 px-2">
-        <label style="cursor:pointer"><input type="checkbox" id="rememberMe"> تذكرني دائماً 💾</label>
-    </div>
-
-    <button class="btn-saiko w-100 mb-2" onclick="login()">دخول الحساب 🚀</button>
-
-    <div class="marketing-box">
-        <p class="small mb-3">تواصل مع <b>SAIKO</b> لتنشيط حسابك، أو لطلب تصميم موقع احترافي خاص بك مثل هذا المتجر! ✨</p>
-        <a href="https://wa.me/201289984200" class="btn-wa"><i class="fab fa-whatsapp"></i> تواصل مع المصمم الآن</a>
-    </div>
+    <button class="btn-saiko w-100" onclick="login()">دخول الحساب 🚀</button>
 </div>
 
 <div id="admin-content" class="container" style="display: none;">
-    <div class="d-flex justify-content-between align-items-center mb-4 bg-dark p-3 rounded-pill shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4 bg-dark p-3 rounded-pill">
         <h5 class="mb-0 px-3">إدارة المتجر ⚙️</h5>
-        <button class="btn btn-danger btn-sm rounded-pill px-3" onclick="logout()">خروج <i class="fas fa-sign-out-alt"></i></button>
+        <button class="btn btn-danger btn-sm rounded-pill px-3" onclick="logout()">خروج</button>
     </div>
 
     <div class="row g-3 mb-4 text-center">
         <div class="col-12 col-md-6">
             <div class="stat-box d-flex justify-content-around align-items-center" style="border-color: #ff4d94;">
-                <div>
-                    <small>القطع 📦</small>
-                    <h3 id="total-p">0</h3>
-                </div>
+                <div><small>القطع 📦</small><h3 id="total-p">0</h3></div>
                 <div style="width: 2px; height: 40px; background: rgba(255,255,255,0.2);"></div>
-                <div>
-                    <small>الإعجابات 👍</small>
-                    <h3 id="total-likes">0</h3>
-                </div>
+                <div><small>الإعجابات 👍</small><h3 id="total-likes">0</h3></div>
             </div>
         </div>
         
@@ -136,15 +91,16 @@
             <div class="stat-box">
                 <small>الزيارات (يوم | شهر | سنة) 📊</small>
                 <h3 id="visitor-summary">0 | 0 | 0</h3>
-                <p class="mb-0 mt-1" style="font-size: 0.75rem; color: #00d4ff; font-weight: bold;">
-                    إجمالي الزيارات العام: <span id="total-v-all">0</span>
-                </p>
+                <p class="mb-0 mt-1" style="font-size: 0.8rem; color: #00d4ff;">إجمالي الزيارات الفعلي: <span id="total-v-all">0</span></p>
+                <button onclick="resetStats()" class="btn btn-sm btn-outline-warning mt-2 rounded-pill" style="font-size: 0.6rem;">
+                    <i class="fas fa-undo"></i> تصفير العداد
+                </button>
             </div>
         </div>
     </div>
 
     <div class="glass-card">
-        <h5 class="mb-3">إضافة قطعة فنية جديدة ✨</h5>
+        <h5 class="mb-3">إضافة منتج جديد ✨</h5>
         <div class="row g-3">
             <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
             <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر"></div>
@@ -164,13 +120,7 @@
         <div class="table-responsive">
             <table class="table align-middle">
                 <thead>
-                    <tr>
-                        <th>المنتج</th>
-                        <th>السعر</th>
-                        <th>الحالة</th>
-                        <th>التعليقات</th>
-                        <th>حذف</th>
-                    </tr>
+                    <tr><th>المنتج</th><th>السعر</th><th>الحالة</th><th>التعليقات</th><th>حذف</th></tr>
                 </thead>
                 <tbody id="product-list"></tbody>
             </table>
@@ -214,6 +164,74 @@
 
     function logout() { auth.signOut(); }
 
+    function loadVisitorStats() {
+        const now = new Date();
+        const dStr = now.toISOString().split('T')[0];
+        const mStr = dStr.substring(0, 7);
+        const yStr = dStr.substring(0, 4);
+        let vD=0, vM=0, vY=0;
+        const updateUI = () => {
+            document.getElementById('visitor-summary').innerText = `${vD} | ${vM} | ${vY}`;
+            document.getElementById('total-v-all').innerText = vY; 
+        };
+        db.collection("stats").doc("daily").collection("days").doc(dStr).onSnapshot(d => { vD = d.exists ? d.data().count : 0; updateUI(); });
+        db.collection("stats").doc("monthly").collection("months").doc(mStr).onSnapshot(d => { vM = d.exists ? d.data().count : 0; updateUI(); });
+        db.collection("stats").doc("yearly").collection("years").doc(yStr).onSnapshot(d => { vY = d.exists ? d.data().count : 0; updateUI(); });
+    }
+
+    async function resetStats() {
+        Swal.fire({
+            title: 'تصفير العداد؟', text: "سيتم مسح إحصائيات الزوار الحالية!", icon: 'warning',
+            showCancelButton: true, confirmButtonColor: '#ff4d94', confirmButtonText: 'نعم، تصفير'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const now = new Date(), dStr = now.toISOString().split('T')[0], mStr = dStr.substring(0, 7), yStr = dStr.substring(0, 4);
+                const batch = db.batch();
+                batch.delete(db.collection("stats").doc("daily").collection("days").doc(dStr));
+                batch.delete(db.collection("stats").doc("monthly").collection("months").doc(mStr));
+                batch.delete(db.collection("stats").doc("yearly").collection("years").doc(yStr));
+                await batch.commit();
+                Swal.fire('تم!', 'تم تصفير العداد بنجاح.', 'success');
+            }
+        });
+    }
+
+    function loadProducts() {
+        db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = ''; let totalL = 0;
+            document.getElementById('total-p').innerText = snap.size;
+            snap.forEach(doc => {
+                const p = doc.data(); totalL += (p.likes || 0);
+                list.innerHTML += `
+                    <tr>
+                        <td><img src="${p.images[0]}" class="prod-img"><br><small>${p.name}</small></td>
+                        <td>${p.price}ج</td>
+                        <td><div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" ${p.commentsDisabled ? '' : 'checked'} onclick="toggleComments('${doc.id}', ${p.commentsDisabled})">
+                        </div></td>
+                        <td><div id="comm-${doc.id}" style="max-height:80px; overflow-y:auto; width:150px"></div></td>
+                        <td><button class="btn btn-sm btn-danger" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash"></i></button></td>
+                    </tr>`;
+                loadComments(doc.id);
+            });
+            document.getElementById('total-likes').innerText = totalL;
+        });
+    }
+
+    function loadComments(productId) {
+        db.collection("gifts").doc(productId).collection("comments").orderBy("pinned", "desc").orderBy("createdAt", "desc").onSnapshot(snap => {
+            const box = document.getElementById(`comm-${productId}`); if(!box) return; box.innerHTML = '';
+            snap.forEach(d => {
+                const c = d.data();
+                box.innerHTML += `<div class="comment-item ${c.pinned ? 'is-pinned-admin' : ''}">
+                    <span class="text-truncate" style="max-width:80px">${c.text}</span>
+                    <span><i class="fas fa-times text-danger" style="cursor:pointer" onclick="deleteComment('${productId}','${d.id}')"></i></span>
+                </div>`;
+            });
+        });
+    }
+
     let selectedFiles = [];
     function handleFiles(files) {
         selectedFiles = [...selectedFiles, ...Array.from(files)];
@@ -226,8 +244,7 @@
     }
 
     async function addProduct() {
-        const name = document.getElementById('p-name').value;
-        const price = document.getElementById('p-price').value;
+        const name = document.getElementById('p-name').value, price = document.getElementById('p-price').value;
         if(!name || !price || selectedFiles.length === 0) return saikoToast("أكمل البيانات ✨");
         saikoToast("جاري الرفع... 🚀");
         let urls = [];
@@ -242,80 +259,10 @@
         } catch (e) { saikoToast("فشل الرفع ❌"); }
     }
 
-    function loadProducts() {
-        db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
-            const list = document.getElementById('product-list');
-            list.innerHTML = '';
-            let totalL = 0;
-            document.getElementById('total-p').innerText = snap.size;
-            snap.forEach(doc => {
-                const p = doc.data();
-                totalL += (p.likes || 0);
-                list.innerHTML += `
-                    <tr class="border-bottom border-secondary">
-                        <td><img src="${p.images[0]}" class="prod-img"><br><small>${p.name}</small></td>
-                        <td>${p.price}ج</td>
-                        <td>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" ${p.commentsDisabled ? '' : 'checked'} onclick="toggleComments('${doc.id}', ${p.commentsDisabled})">
-                                <br><small style="font-size:0.6rem">${p.commentsDisabled ? 'مغلق' : 'مفتوح'}</small>
-                            </div>
-                        </td>
-                        <td><div id="comm-${doc.id}" style="max-height:80px; overflow-y:auto; width:150px"></div></td>
-                        <td><button class="btn btn-sm btn-danger" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash"></i></button></td>
-                    </tr>`;
-                loadComments(doc.id);
-            });
-            document.getElementById('total-likes').innerText = totalL;
-        });
-    }
-
-    function loadComments(productId) {
-        db.collection("gifts").doc(productId).collection("comments").orderBy("pinned", "desc").orderBy("createdAt", "desc").onSnapshot(snap => {
-            const box = document.getElementById(`comm-${productId}`);
-            if(!box) return; box.innerHTML = '';
-            snap.forEach(d => {
-                const c = d.data();
-                box.innerHTML += `
-                    <div class="comment-item ${c.pinned ? 'is-pinned-admin' : ''}">
-                        <span class="text-truncate" style="max-width:80px">${c.text}</span>
-                        <span>
-                            <i class="fas fa-thumbtack me-1 ${c.pinned ? 'text-info' : 'text-muted'}" style="cursor:pointer" onclick="togglePin('${productId}','${d.id}',${c.pinned})"></i>
-                            <i class="fas fa-times text-danger" style="cursor:pointer" onclick="deleteComment('${productId}','${d.id}')"></i>
-                        </span>
-                    </div>`;
-            });
-        });
-    }
-
-    async function toggleComments(id, currentStatus) {
-        await db.collection("gifts").doc(id).update({ commentsDisabled: !currentStatus });
-        saikoToast(!currentStatus ? "تم قفل التعليقات" : "تم فتح التعليقات");
-    }
-
-    async function togglePin(pId, cId, current) {
-        await db.collection("gifts").doc(pId).collection("comments").doc(cId).update({ pinned: !current });
-    }
-
+    async function toggleComments(id, current) { await db.collection("gifts").doc(id).update({ commentsDisabled: !current }); }
     async function deleteItem(id) { if(confirm("حذف المنتج؟")) await db.collection("gifts").doc(id).delete(); }
     async function deleteComment(pId, cId) { await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete(); }
-
-    function loadVisitorStats() {
-        const now = new Date();
-        const dateStr = now.toISOString().split('T')[0];
-        const monthStr = dateStr.substring(0, 7);
-        const yearStr = dateStr.substring(0, 4);
-        let vD = 0, vM = 0, vY = 0;
-
-        const updateUI = () => {
-            document.getElementById('visitor-summary').innerText = `${vD} | ${vM} | ${vY}`;
-            document.getElementById('total-v-all').innerText = vD + vM + vY;
-        };
-
-        db.collection("stats").doc("daily").collection("days").doc(dateStr).onSnapshot(d => { vD = d.exists ? d.data().count : 0; updateUI(); });
-        db.collection("stats").doc("monthly").collection("months").doc(monthStr).onSnapshot(d => { vM = d.exists ? d.data().count : 0; updateUI(); });
-        db.collection("stats").doc("yearly").collection("years").doc(yearStr).onSnapshot(d => { vY = d.exists ? d.data().count : 0; updateUI(); });
-    }
 </script>
 </body>
 </html>
+
