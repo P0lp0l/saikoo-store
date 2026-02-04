@@ -167,7 +167,6 @@
         const last = localStorage.getItem(key);
         const docRef = db.collection("gifts").doc(id);
         const batch = db.batch();
-
         if (last === type) {
             batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(-1) });
             localStorage.removeItem(key);
@@ -181,28 +180,37 @@
         await batch.commit();
     }
 
-    // تعديل دالة تحميل التعليقات لتدعم التثبيت والترتيب للأعلى
     function loadComments(id) {
+        // نستخدم الترتيب الجديد الذي يدعمه الـ Index
         db.collection("gifts").doc(id).collection("comments")
-          .orderBy("pinned", "desc") // ترتيب المثبت أولاً
-          .orderBy("createdAt", "asc") // ثم الوقت
+          .orderBy("pinned", "desc")
+          .orderBy("createdAt", "desc")
           .onSnapshot(snap => {
             const area = document.getElementById(`box-${id}`);
             if(!area) return;
             area.innerHTML = '';
             snap.forEach(d => {
                 const c = d.data();
-                // تمييز التعليق المثبت في الاندكس
-                const pinnedBadge = c.pinned ? '<i class="fas fa-thumbtack me-1" style="color:#ff4d94"></i> ' : '';
-                const pinnedStyle = c.pinned ? 'border-right: 4px solid #00d4ff; background: rgba(0,212,255,0.1);' : '';
-
-                area.innerHTML += `<div class="comment-item" style="${pinnedStyle}">
+                const isPinned = c.pinned === true;
+                area.innerHTML += `<div class="comment-item" style="${isPinned ? 'border-right: 4px solid #00d4ff; background: rgba(0,212,255,0.1);' : ''}">
                     ${c.userId === userId ? `<span onclick="deleteComment('${id}','${d.id}')" class="del-btn">حذف</span>` : ''}
-                    <div style="font-size: 0.9rem;">${pinnedBadge}${c.text}</div>
+                    <div style="font-size: 0.9rem;">${isPinned ? '📌 ' : ''}${c.text}</div>
                 </div>`;
             });
-        }, error => {
-            console.log("الترتيب يحتاج تفعيل Index من Firebase Console كما شرحنا سابقاً.");
+        }, err => {
+            console.error("خطأ في جلب التعليقات:", err);
+            // في حالة وجود خطأ (مثل تعليقات قديمة لا تملك حقل pinned)، نقوم بجلبها بدون ترتيب مؤقتاً
+            db.collection("gifts").doc(id).collection("comments").orderBy("createdAt", "desc").onSnapshot(s => {
+                 const area = document.getElementById(`box-${id}`);
+                 if(!area) return; area.innerHTML = '';
+                 s.forEach(d => {
+                     const c = d.data();
+                     area.innerHTML += `<div class="comment-item">
+                        ${c.userId === userId ? `<span onclick="deleteComment('${id}','${d.id}')" class="del-btn">حذف</span>` : ''}
+                        <div style="font-size: 0.9rem;">${c.text}</div>
+                     </div>`;
+                 });
+            });
         });
     }
 
@@ -212,7 +220,7 @@
         await db.collection("gifts").doc(id).collection("comments").add({
             text: inp.value, 
             userId: userId, 
-            pinned: false, // القيمة الافتراضية
+            pinned: false, // قيمة افتراضية ليعمل الـ Index
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         inp.value = '';
@@ -223,8 +231,7 @@
         .then(async (res) => { if (res.isConfirmed) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete(); });
     }
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
+
