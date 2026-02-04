@@ -3,85 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم سايكو ستور | Admin</title>
+    <title>إدارة سايكو ستور | Admin 🚀</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #0f0c29; background: linear-gradient(to right, #24243e, #302b63, #0f0c29); color: white; min-height: 100vh; padding: 20px; }
-        .admin-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; margin-bottom: 30px; }
-        h2, h4 { color: #ff4d94; font-weight: 700; text-shadow: 0 0 10px rgba(255, 77, 148, 0.5); }
-        .form-control { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
-        .btn-primary { background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; border-radius: 12px; padding: 12px; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn-designer { border: 2px solid #00d4ff; color: #00d4ff; border-radius: 12px; padding: 10px; font-weight: bold; width: 100%; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn-designer:hover { background: rgba(0, 212, 255, 0.1); color: white; transform: scale(1.02); }
-        #drop-area { border: 2px dashed #ff4d94; border-radius: 15px; background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; padding: 20px; text-align: center; }
-        .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .preview-item { position: relative; width: 80px; height: 80px; }
-        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d94; }
-        .remove-img { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .table { color: white; vertical-align: middle; }
-        .table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
-        #admin-content { display: none; }
-        #upload-status { color: #00d4ff; display: none; font-weight: bold; text-align: center; margin-top: 10px; }
-        .search-box { border: 2px solid #00d4ff !important; background: rgba(0, 212, 255, 0.1) !important; color: white !important; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         
-        /* تنسيق قسم التعليقات في الأدمن */
-        .admin-comment-box { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 10px; margin-top: 5px; max-height: 150px; overflow-y: auto; font-size: 0.85rem; }
-        .admin-comment-item { display: flex; justify-content: space-between; align-items: center; padding: 5px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .admin-comment-item.pinned { border-left: 3px solid #ff4d94; background: rgba(255, 77, 148, 0.05); }
-        .comment-actions { display: flex; gap: 5px; }
-        .btn-action { padding: 2px 8px; font-size: 0.7rem; border-radius: 5px; border: none; cursor: pointer; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            color: white; min-height: 100vh; padding: 20px; margin: 0;
+        }
+
+        /* تأثير الخلفية المتحركة */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at bottom right, rgba(255, 77, 148, 0.15), transparent 40%),
+                        radial-gradient(circle at top left, rgba(37, 117, 252, 0.15), transparent 40%);
+            z-index: -1;
+        }
+
+        .admin-card { 
+            background: rgba(255, 255, 255, 0.07); 
+            backdrop-filter: blur(20px); 
+            border-radius: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 25px; margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h2, h4 { color: #ff4d94; font-weight: 900; text-shadow: 0 0 15px rgba(255, 77, 148, 0.3); }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 15px;
+            text-align: center; border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: #00d4ff; }
+
+        .form-control { 
+            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); 
+            color: white !important; border-radius: 15px; padding: 12px; margin-bottom: 15px; 
+        }
+        .form-control:focus { background: rgba(0, 0, 0, 0.3); border-color: #ff4d94; box-shadow: none; }
+
+        .btn-primary { 
+            background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; 
+            border-radius: 15px; padding: 12px; font-weight: 900; width: 100%; 
+            box-shadow: 0 5px 15px rgba(255, 77, 148, 0.4); transition: 0.3s;
+        }
+        .btn-primary:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        #drop-area { 
+            border: 2px dashed rgba(255, 77, 148, 0.5); border-radius: 20px; 
+            background: rgba(255, 77, 148, 0.05); cursor: pointer; transition: 0.3s; 
+            padding: 30px; text-align: center; 
+        }
+        #drop-area:hover { background: rgba(255, 77, 148, 0.1); border-color: #ff4d94; }
+
+        .table { --bs-table-bg: transparent; color: white; border-color: rgba(255, 255, 255, 0.05); }
+        .table thead { background: rgba(255, 77, 148, 0.1); }
+        .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1); }
+
+        /* ستايل التعليقات في الأدمن */
+        .admin-comment-box { 
+            background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 10px; 
+            max-height: 150px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .admin-comment-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem;
+        }
+        .admin-comment-item.pinned { border-right: 4px solid #ff4d94; background: rgba(255, 77, 148, 0.1); }
+
+        .btn-action { width: 30px; height: 30px; border-radius: 10px; border: none; font-size: 0.8rem; margin: 2px; transition: 0.2s; }
+        .btn-action:hover { transform: scale(1.1); }
+
+        .preview-item { position: relative; width: 90px; height: 90px; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; border: 2px solid #ff4d94; }
+        .remove-img { position: absolute; top: -8px; right: -8px; background: #ff4d4d; border-radius: 50%; width: 25px; height: 25px; border: none; color: white; }
+
+        #upload-status { color: #00d4ff; font-weight: bold; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-<div id="login-section" class="admin-card" style="max-width: 450px; margin: 100px auto;">
-    <h2 class="text-center mb-4">دخول إدارة سايكو 🔐</h2>
+<div id="login-section" class="admin-card" style="max-width: 450px; margin: 80px auto;">
+    <div class="text-center mb-4">
+        <i class="fas fa-user-shield fa-3x text-white mb-3"></i>
+        <h2>دخول الإدارة 🔐</h2>
+    </div>
     <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني">
     <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور">
-    <button class="btn btn-primary mt-3" onclick="login()">دخول الآن</button>
+    <button class="btn btn-primary mt-3" onclick="login()">دخول الآن 🚀</button>
 </div>
 
-<div id="admin-content" class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>لوحة تحكم SAIKO Store</h2>
-        <button class="btn btn-outline-light btn-sm" onclick="logout()">خروج</button>
+<div id="admin-content" class="container" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <div>
+            <h2 class="mb-0">لوحة تحكم سايكو 💎</h2>
+            <small class="text-info">أهلاً بك يوسف، أتمنى لك يوماً سعيداً</small>
+        </div>
+        <button class="btn btn-outline-danger rounded-pill px-4" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> خروج
+        </button>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="stat-card"><h5>إجمالي المنتجات</h5><h2 id="total-p">0</h2></div></div>
+        <div class="col-md-4"><div class="stat-card"><h5>إجمالي الإعجابات</h5><h2 id="total-likes" class="text-success">0</h2></div></div>
+        <div class="col-md-4"><div class="stat-card"><h5>إجمالي التعليقات</h5><h2 id="total-comm" class="text-info">0</h2></div></div>
     </div>
 
     <div class="admin-card">
-        <h4>إضافة منتج جديد ✨</h4>
+        <h4>إضافة لمسة سحرية جديدة ✨</h4>
         <div class="row g-3">
-            <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
+            <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم الهدية"></div>
             <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
             <div class="col-12">
                 <div id="drop-area" onclick="document.getElementById('p-files').click()">
-                    <i class="fas fa-images fa-2x mb-2" style="color: #ff4d94;"></i>
-                    <p class="mb-0">اضغط هنا لرفع الصور</p>
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-2" style="color: #00d4ff;"></i>
+                    <p class="mb-0 fw-bold text-white">اسحب الصور هنا أو اضغط للاختيار</p>
                     <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
                 </div>
-                <div id="preview-container" class="preview-container"></div>
+                <div id="preview-container" class="preview-container d-flex flex-wrap gap-2 mt-3"></div>
             </div>
-            <div id="upload-status">جاري رفع الصور لسايكو ستور... ⏳</div>
-            <button class="btn btn-primary mt-3" onclick="addProduct()">إضافة للمتجر الآن 🚀</button>
+            <div id="upload-status" class="text-center" style="display:none">جاري رفع الصور لسايكو ستور... ⏳</div>
+            <button class="btn btn-primary mt-3 py-3" onclick="addProduct()">إضافة للمتجر الآن 🛍️</button>
         </div>
     </div>
 
     <div class="admin-card">
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
             <h4>إدارة المنتجات والتعليقات</h4>
-            <input type="text" id="admin-search" class="form-control search-box" style="max-width: 300px;" placeholder="بحث باسم المنتج..." onkeyup="filterProducts()">
+            <div class="position-relative" style="min-width: 300px;">
+                <input type="text" id="admin-search" class="form-control mb-0 rounded-pill" placeholder="🔍 ابحث عن منتج..." onkeyup="filterProducts()">
+            </div>
         </div>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table align-middle">
                 <thead>
                     <tr>
-                        <th>الصورة</th>
                         <th>المنتج</th>
                         <th>التفاعل</th>
-                        <th>التعليقات والتحكم</th>
-                        <th>حذف المنتج</th>
+                        <th style="width: 350px;">التعليقات</th>
+                        <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody id="product-list"></tbody>
@@ -111,7 +180,7 @@
     let selectedFiles = [];
 
     function showToast(msg, color) {
-        Toastify({ text: msg, duration: 3000, gravity: "top", position: "center", style: { background: color, borderRadius: "10px" } }).showToast();
+        Toastify({ text: msg, duration: 3000, gravity: "top", position: "center", style: { background: color, borderRadius: "15px", fontWeight: "bold" } }).showToast();
     }
 
     function handleFiles(files) {
@@ -127,7 +196,7 @@
             reader.onload = (e) => {
                 const div = document.createElement('div');
                 div.className = 'preview-item';
-                div.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImage(${index})">×</button>`;
+                div.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImage(${index})"><i class="fas fa-times"></i></button>`;
                 container.appendChild(div);
             };
             reader.readAsDataURL(file);
@@ -149,7 +218,7 @@
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
         const status = document.getElementById('upload-status');
-        if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات! ⚠️", "#ff9800");
+        if(!name || !price || selectedFiles.length === 0) return showToast("املأ البيانات يا يوسف! ⚠️", "#ff9800");
         status.style.display = 'block';
         let urls = [];
         try {
@@ -163,7 +232,7 @@
                 name, price, images: urls, likes: 0, dislikes: 0, createdAt: new Date() 
             });
             status.style.display = 'none';
-            showToast("تمت الإضافة ✅", "#25d366");
+            showToast("تمت الإضافة للمتجر بنجاح 🌸", "#25d366");
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
             selectedFiles = []; renderPreview();
@@ -173,29 +242,40 @@
     function loadProducts() {
         db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
             const list = document.getElementById('product-list');
+            let totalLikes = 0;
             list.innerHTML = '';
+            document.getElementById('total-p').innerText = snap.size;
+
             snap.forEach(doc => {
                 const p = doc.data();
-                const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/50';
+                totalLikes += (p.likes || 0);
+                const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/60';
                 
                 let row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><img src="${mainImg}" class="table-img"></td>
-                    <td><b>${p.name}</b><br><small>${p.price} ج.م</small></td>
                     <td>
-                        <span class="text-success">👍 ${p.likes || 0}</span><br>
-                        <span class="text-danger">👎 ${p.dislikes || 0}</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="${mainImg}" class="table-img">
+                            <div><b class="d-block">${p.name}</b><span class="text-info">${p.price} ج.م</span></div>
+                        </div>
                     </td>
                     <td>
-                        <div class="admin-comment-box" id="comments-${doc.id}">جاري التحميل...</div>
+                        <span class="badge bg-success mb-1">👍 ${p.likes || 0}</span><br>
+                        <span class="badge bg-danger">👎 ${p.dislikes || 0}</span>
                     </td>
-                    <td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash"></i></button></td>
+                    <td>
+                        <div class="admin-comment-box" id="comments-${doc.id}">جاري تحميل التعليقات...</div>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-action" onclick="deleteItem('${doc.id}')" title="حذف المنتج">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 `;
                 list.appendChild(row);
-
-                // تحميل وإدارة التعليقات لكل منتج
                 loadCommentsForAdmin(doc.id);
             });
+            document.getElementById('total-likes').innerText = totalLikes;
         });
     }
 
@@ -203,15 +283,15 @@
         db.collection("gifts").doc(productId).collection("comments").orderBy("createdAt", "desc").onSnapshot(snap => {
             const container = document.getElementById(`comments-${productId}`);
             if(!container) return;
-            container.innerHTML = snap.empty ? '<small class="text-muted">لا توجد تعليقات</small>' : '';
+            container.innerHTML = snap.empty ? '<small class="text-muted opacity-50">لا توجد تعليقات</small>' : '';
             snap.forEach(cDoc => {
                 const c = cDoc.data();
                 const div = document.createElement('div');
                 div.className = `admin-comment-item ${c.pinned ? 'pinned' : ''}`;
                 div.innerHTML = `
-                    <span style="flex:1">${c.text}</span>
-                    <div class="comment-actions">
-                        <button class="btn-action bg-warning" onclick="togglePinComment('${productId}', '${cDoc.id}', ${c.pinned})">
+                    <span style="flex:1" class="pe-2">${c.text}</span>
+                    <div class="d-flex">
+                        <button class="btn-action ${c.pinned ? 'bg-info' : 'bg-warning'}" onclick="togglePinComment('${productId}', '${cDoc.id}', ${c.pinned})">
                             <i class="fas fa-thumbtack"></i>
                         </button>
                         <button class="btn-action bg-danger text-white" onclick="deleteComment('${productId}', '${cDoc.id}')">
@@ -225,29 +305,30 @@
     }
 
     async function deleteComment(pId, cId) {
-        if(confirm("حذف التعليق نهائياً؟")) {
+        if(confirm("هل أنت متأكد من حذف هذا التعليق؟")) {
             await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
-            showToast("تم حذف التعليق 🗑️", "#ff4d4d");
+            showToast("تم حذف التعليق بنجاح 🗑️", "#ff4d4d");
         }
     }
 
     async function togglePinComment(pId, cId, currentStatus) {
-        await db.collection("gifts").doc(pId).collection("comments").doc(cId).update({
-            pinned: !currentStatus
-        });
-        showToast(currentStatus ? "تم إلغاء التثبيت" : "تم تثبيت التعليق 📌", "#00d4ff");
+        await db.collection("gifts").doc(pId).collection("comments").doc(cId).update({ pinned: !currentStatus });
+        showToast(currentStatus ? "تم إلغاء التثبيت" : "تم تثبيت التعليق بنجاح 📌", "#00d4ff");
     }
 
-    async function deleteItem(id) { if(confirm("حذف المنتج نهائياً؟")) await db.collection("gifts").doc(id).delete(); }
+    async function deleteItem(id) { if(confirm("حذف المنتج نهائياً من المتجر؟")) await db.collection("gifts").doc(id).delete(); }
+    
     function filterProducts() {
         let input = document.getElementById('admin-search').value.toLowerCase();
         let rows = document.getElementById('product-list').getElementsByTagName('tr');
         for (let row of rows) {
-            let name = row.getElementsByTagName('td')[1].innerText.toLowerCase();
+            let name = row.getElementsByTagName('td')[0].innerText.toLowerCase();
             row.style.display = name.includes(input) ? "" : "none";
         }
     }
+    
     function logout() { auth.signOut(); location.reload(); }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
