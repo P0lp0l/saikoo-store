@@ -86,7 +86,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
 <script>
-    // 1. نظام البالونات المحسن
     function createBalloon() {
         const container = document.getElementById('balloon-container');
         const b = document.createElement('div');
@@ -98,7 +97,6 @@
     }
     setInterval(createBalloon, 1200);
 
-    // 2. إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
         authDomain: "flafilo-store.firebaseapp.com",
@@ -114,7 +112,6 @@
 
     let allGifts = [];
 
-    // 3. جلب وعرض البيانات
     db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
         allGifts = [];
         snap.forEach(doc => allGifts.push({id: doc.id, ...doc.data()}));
@@ -159,7 +156,6 @@
         });
     }
 
-    // 4. وظائف التفاعل والبحث
     function filterGifts() {
         const query = document.getElementById('searchBar').value.toLowerCase();
         const filtered = allGifts.filter(g => g.name.toLowerCase().includes(query));
@@ -185,19 +181,28 @@
         await batch.commit();
     }
 
+    // تعديل دالة تحميل التعليقات لتدعم التثبيت والترتيب للأعلى
     function loadComments(id) {
-        db.collection("gifts").doc(id).collection("comments").orderBy("createdAt", "asc").onSnapshot(snap => {
+        db.collection("gifts").doc(id).collection("comments")
+          .orderBy("pinned", "desc") // ترتيب المثبت أولاً
+          .orderBy("createdAt", "asc") // ثم الوقت
+          .onSnapshot(snap => {
             const area = document.getElementById(`box-${id}`);
             if(!area) return;
             area.innerHTML = '';
-            let arr = []; snap.forEach(d => arr.push({id: d.id, ...d.data()}));
-            arr.sort((a,b) => (b.isPinned||false) - (a.isPinned||false));
-            arr.forEach(c => {
-                area.innerHTML += `<div class="comment-item">
-                    ${c.userId === userId ? `<span onclick="deleteComment('${id}','${c.id}')" class="del-btn">حذف</span>` : ''}
-                    <div style="font-size: 0.9rem;">${c.isPinned ? '📌 ' : ''}${c.text}</div>
+            snap.forEach(d => {
+                const c = d.data();
+                // تمييز التعليق المثبت في الاندكس
+                const pinnedBadge = c.pinned ? '<i class="fas fa-thumbtack me-1" style="color:#ff4d94"></i> ' : '';
+                const pinnedStyle = c.pinned ? 'border-right: 4px solid #00d4ff; background: rgba(0,212,255,0.1);' : '';
+
+                area.innerHTML += `<div class="comment-item" style="${pinnedStyle}">
+                    ${c.userId === userId ? `<span onclick="deleteComment('${id}','${d.id}')" class="del-btn">حذف</span>` : ''}
+                    <div style="font-size: 0.9rem;">${pinnedBadge}${c.text}</div>
                 </div>`;
             });
+        }, error => {
+            console.log("الترتيب يحتاج تفعيل Index من Firebase Console كما شرحنا سابقاً.");
         });
     }
 
@@ -205,7 +210,10 @@
         const inp = document.getElementById(`inp-${id}`);
         if(!inp.value.trim()) return;
         await db.collection("gifts").doc(id).collection("comments").add({
-            text: inp.value, userId: userId, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            text: inp.value, 
+            userId: userId, 
+            pinned: false, // القيمة الافتراضية
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         inp.value = '';
     }
