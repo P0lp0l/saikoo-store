@@ -3,130 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم سايكو ستور | Admin 🚀</title>
+    <title>إدارة سايكو ستور | Premium Admin 🚀</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         
-        /* خلفية متحركة هادئة جداً */
+        /* خلفية متحركة احترافية وهادئة */
         body { 
             font-family: 'Cairo', sans-serif; 
-            background: linear-gradient(135deg, #0f0c29, #1a1a2e, #16213e, #0f0c29);
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #0f0c29);
             background-size: 400% 400%;
-            animation: slowGradient 20s ease infinite;
+            animation: gradientBG 15s ease infinite;
             background-attachment: fixed;
-            color: #f8f9fa; /* خط فاتح جداً وواضح */
-            min-height: 100vh; padding: 20px; margin: 0;
+            color: #ffffff; min-height: 100vh; padding: 20px; margin: 0;
+            overflow-x: hidden;
         }
 
-        @keyframes slowGradient {
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .admin-card { 
-            background: rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(15px); 
+        /* كروت بتصميم زجاجي احترافي */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(20px); 
             border-radius: 25px; 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            padding: 30px; margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 25px; margin-bottom: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: 0.3s ease;
         }
 
-        h2, h4 { color: #ffffff; font-weight: 900; text-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
-        
-        /* تحسين وضوح المدخلات */
+        .section-title {
+            border-right: 5px solid #ff4d94;
+            padding-right: 15px;
+            margin-bottom: 25px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 77, 148, 0.5);
+        }
+
+        /* تحسين شكل الجدول ليكون أكثر حداثة */
+        .modern-table {
+            border-collapse: separate;
+            border-spacing: 0 12px;
+            width: 100%;
+        }
+        .modern-table tr {
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        .modern-table tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.005);
+        }
+        .modern-table th { padding: 15px; border: none; color: #ff4d94; font-weight: 700; }
+        .modern-table td { padding: 15px; border: none; vertical-align: middle; }
+        .modern-table td:first-child { border-radius: 0 15px 15px 0; }
+        .modern-table td:last-child { border-radius: 15px 0 0 15px; }
+
+        .prod-img { width: 65px; height: 65px; object-fit: cover; border-radius: 15px; border: 2px solid #ff4d94; }
+
+        /* ستايل المدخلات */
         .form-control { 
-            background: rgba(0, 0, 0, 0.3) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #ffffff !important; 
-            border-radius: 12px; padding: 12px; 
+            background: rgba(0, 0, 0, 0.2) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            color: #fff !important; 
+            border-radius: 12px; padding: 12px; transition: 0.3s;
         }
-        .form-control::placeholder { color: rgba(255, 255, 255, 0.5); }
-
-        .btn-primary { 
-            background: linear-gradient(45deg, #ff4d94, #ff758c); border: none; 
-            border-radius: 12px; padding: 12px; font-weight: bold; width: 100%; transition: 0.3s;
-        }
-
-        #drop-area { 
-            border: 2px dashed #ff4d94; border-radius: 20px; 
-            background: rgba(255, 77, 148, 0.05); cursor: pointer; padding: 25px; text-align: center; 
+        .form-control:focus {
+            border-color: #ff4d94;
+            box-shadow: 0 0 15px rgba(255, 77, 148, 0.3);
+            background: rgba(0, 0, 0, 0.4) !important;
         }
 
-        .table { color: #f8f9fa; vertical-align: middle; }
-        .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
-
-        .admin-comment-box { 
-            background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 10px; 
-            max-height: 150px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1);
+        /* ستايل التعليقات المطور */
+        .comment-item-admin {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 3px solid #00d4ff;
         }
-        
-        .preview-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d94; }
-        
-        /* إحصائيات علوية */
-        .stat-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .stat-box h3 { color: #00d4ff; }
+        .comment-item-admin.is-pinned { border-right-color: #ff4d94; background: rgba(255, 77, 148, 0.1); }
+
+        /* تصميم الأزرار */
+        .btn-saiko {
+            background: linear-gradient(45deg, #ff4d94, #ff758c);
+            border: none; border-radius: 12px; padding: 12px 25px;
+            font-weight: 700; color: white; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4);
+        }
+        .btn-saiko:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 77, 148, 0.6); }
+
+        .btn-delete { color: #ff4d4d; background: none; border: none; font-size: 1.2rem; transition: 0.2s; }
+        .btn-delete:hover { color: #ff0000; transform: scale(1.2); }
+
+        /* ستايل Toastify المخصص لسايكو */
+        .saiko-toast {
+            border-radius: 15px !important;
+            padding: 15px 25px !important;
+            font-family: 'Cairo', sans-serif !important;
+            font-weight: bold !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
 <body>
 
-<div id="login-section" class="admin-card" style="max-width: 450px; margin: 100px auto;">
-    <h2 class="text-center mb-4">دخول إدارة سايكو 🔐</h2>
+<div id="login-section" class="glass-card" style="max-width: 450px; margin: 100px auto;">
+    <div class="text-center mb-4">
+        <i class="fas fa-lock fa-3x mb-3" style="color: #ff4d94;"></i>
+        <h2 class="fw-900">إدارة سايكو ستور</h2>
+    </div>
     <input type="email" id="login-email" class="form-control mb-3" placeholder="البريد الإلكتروني">
     <input type="password" id="login-password" class="form-control mb-3" placeholder="كلمة المرور">
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="rememberMe" checked>
-        <label class="form-check-label" for="rememberMe">تذكر دخولي على هذا الجهاز</label>
+    <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" id="remMe" checked>
+        <label class="form-check-label ms-2">تذكر دخولي</label>
     </div>
-    <button class="btn btn-primary" onclick="login()">دخول الآن</button>
+    <button class="btn-saiko w-100" onclick="login()">دخول الإدارة 🚀</button>
 </div>
 
 <div id="admin-content" class="container" style="display: none;">
-    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-        <h2>لوحة التحكم | SAIKO</h2>
-        <button class="btn btn-outline-light rounded-pill px-4" onclick="logout()">تسجيل الخروج <i class="fas fa-sign-out-alt"></i></button>
+    <div class="d-flex justify-content-between align-items-center mb-5 mt-3">
+        <div>
+            <h1 class="fw-900 mb-0">لوحة التحكم 💎</h1>
+            <p class="text-info mb-0">مرحباً يوسف، جاهز لإدارة المتجر؟</p>
+        </div>
+        <button class="btn btn-outline-light rounded-pill px-4" onclick="logout()">خروج <i class="fas fa-sign-out-alt ms-1"></i></button>
     </div>
 
-    <div class="row g-3 mb-4 text-center">
-        <div class="col-md-6"><div class="stat-box"><h5>إجمالي المنتجات</h5><h3 id="total-p">0</h3></div></div>
-        <div class="col-md-6"><div class="stat-box"><h5>إجمالي التفاعلات</h5><h3 id="total-likes">0</h3></div></div>
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="glass-card text-center py-4 mb-0">
+                <h5 class="text-info fw-bold">إجمالي المنتجات</h5>
+                <h2 id="total-p" class="fw-900">0</h2>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="glass-card text-center py-4 mb-0">
+                <h5 class="text-success fw-bold">التفاعلات (Likes)</h5>
+                <h2 id="total-likes" class="fw-900">0</h2>
+            </div>
+        </div>
     </div>
 
-    <div class="admin-card">
-        <h4>إضافة منتج جديد ✨</h4>
+    <div class="glass-card mb-5">
+        <h4 class="section-title">إضافة قطعة فنية جديدة ✨</h4>
         <div class="row g-3">
-            <div class="col-md-6"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
-            <div class="col-md-6"><input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)"></div>
-            <div class="col-12">
+            <div class="col-md-6">
+                <input type="text" id="p-name" class="form-control" placeholder="اسم المنتج الفاخر">
+            </div>
+            <div class="col-md-6">
+                <input type="number" id="p-price" class="form-control" placeholder="السعر (ج.م)">
+            </div>
+            <div class="col-12 mt-4">
                 <div id="drop-area" onclick="document.getElementById('p-files').click()">
-                    <i class="fas fa-images fa-2x mb-2" style="color: #ff4d94;"></i>
-                    <p class="mb-0">اضغط لرفع الصور</p>
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #ff4d94;"></i>
+                    <p class="fw-bold mb-0">اسحب الصور هنا أو اضغط للاختيار</p>
                     <input type="file" id="p-files" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
                 </div>
-                <div id="preview-container" class="preview-container d-flex flex-wrap gap-2 mt-3"></div>
+                <div id="preview-container" class="d-flex flex-wrap gap-3 mt-3"></div>
             </div>
-            <div id="upload-status" class="text-center w-100" style="display:none; color:#00d4ff;">جاري الرفع... ⏳</div>
-            <button class="btn btn-primary mt-3" onclick="addProduct()">إضافة للمتجر 🚀</button>
+            <div id="up-status" class="text-center w-100" style="display:none; color:#00d4ff; font-weight:bold;">جاري تحديث قاعدة البيانات... ⏳</div>
+            <div class="col-12 mt-4">
+                <button class="btn-saiko w-100 py-3 fs-5" onclick="addProduct()">نشر المنتج في المتجر الآن 🛍️</button>
+            </div>
         </div>
     </div>
 
-    <div class="admin-card">
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            <h4>إدارة المنتجات والتعليقات</h4>
-            <input type="text" id="admin-search" class="form-control" style="max-width: 300px;" placeholder="بحث باسم المنتج..." onkeyup="filterProducts()">
+    <div class="glass-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+            <h4 class="section-title mb-0">إدارة المخزون والتعليقات</h4>
+            <input type="text" id="admin-search" class="form-control" style="max-width: 300px;" placeholder="🔍 بحث عن منتج..." onkeyup="filterProducts()">
         </div>
+        
         <div class="table-responsive">
-            <table class="table">
+            <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>الصورة</th>
                         <th>المنتج</th>
                         <th>التفاعل</th>
-                        <th>التعليقات</th>
+                        <th style="min-width: 300px;">التعليقات والتحكم</th>
                         <th>حذف</th>
                     </tr>
                 </thead>
@@ -156,7 +225,22 @@
 
     let selectedFiles = [];
 
-    // فحص حالة تسجيل الدخول المحفوظة
+    // نظام التنبيهات الاحترافي
+    function saikoToast(msg, isSuccess = true) {
+        Toastify({
+            text: msg,
+            duration: 3500,
+            gravity: "top",
+            position: "center",
+            className: "saiko-toast",
+            style: {
+                background: isSuccess ? "linear-gradient(45deg, #00b09b, #96c93d)" : "linear-gradient(45deg, #ff5f6d, #ffc371)",
+                border: "1px solid rgba(255,255,255,0.2)"
+            }
+        }).showToast();
+    }
+
+    // فحص حالة الدخول
     auth.onAuthStateChanged((user) => {
         if (user) {
             document.getElementById('login-section').style.display = 'none';
@@ -171,21 +255,15 @@
     async function login() {
         const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-password').value;
-        const remember = document.getElementById('rememberMe').checked;
-
+        const rem = document.getElementById('remMe').checked;
         try {
-            // تحديد هل يتم حفظ الجلسة أم لا
-            const persistence = remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
-            await auth.setPersistence(persistence);
+            await auth.setPersistence(rem ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
             await auth.signInWithEmailAndPassword(email, pass);
-        } catch (e) {
-            Toastify({ text: "خطأ في بيانات الدخول ❌", style: { background: "#ff4d4d" } }).showToast();
-        }
+            saikoToast("أهلاً بعودتك يا ملك الإدارة! 👑");
+        } catch (e) { saikoToast("بيانات الدخول خطأ ❌", false); }
     }
 
-    function logout() {
-        auth.signOut();
-    }
+    function logout() { auth.signOut(); saikoToast("تم تسجيل الخروج بأمان"); }
 
     function handleFiles(files) {
         selectedFiles = [...selectedFiles, ...Array.from(files)];
@@ -199,8 +277,8 @@
             const reader = new FileReader();
             reader.onload = (e) => {
                 const div = document.createElement('div');
-                div.className = 'preview-item position-relative';
-                div.innerHTML = `<img src="${e.target.result}"><button onclick="removeImage(${index})" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:20px;">×</button>`;
+                div.className = 'position-relative';
+                div.innerHTML = `<img src="${e.target.result}" class="prod-img"><button onclick="removeImage(${index})" class="btn-delete" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; width:20px; height:20px; font-size:12px; display:flex; align-items:center; justify-content:center;">×</button>`;
                 container.appendChild(div);
             };
             reader.readAsDataURL(file);
@@ -212,8 +290,9 @@
     async function addProduct() {
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
-        const status = document.getElementById('upload-status');
-        if(!name || !price || selectedFiles.length === 0) return;
+        const status = document.getElementById('up-status');
+        if(!name || !price || selectedFiles.length === 0) return saikoToast("أكمل البيانات أولاً! ⚠️", false);
+        
         status.style.display = 'block';
         let urls = [];
         try {
@@ -225,11 +304,9 @@
             }
             await db.collection("gifts").add({ name, price, images: urls, likes: 0, dislikes: 0, createdAt: new Date() });
             status.style.display = 'none';
-            selectedFiles = []; renderPreview();
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            Toastify({ text: "تمت الإضافة ✅", style: { background: "#25d366" } }).showToast();
-        } catch (e) { status.style.display = 'none'; }
+            saikoToast("تم نشر المنتج بنجاح! 🎉");
+            location.reload();
+        } catch (e) { status.style.display = 'none'; saikoToast("فشل الرفع ❌", false); }
     }
 
     function loadProducts() {
@@ -244,11 +321,22 @@
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : '';
                 list.innerHTML += `
                     <tr>
-                        <td><img src="${mainImg}" class="table-img"></td>
-                        <td><b>${p.name}</b><br><small>${p.price} ج.م</small></td>
-                        <td>👍 ${p.likes || 0}<br>👎 ${p.dislikes || 0}</td>
-                        <td><div class="admin-comment-box" id="comments-${doc.id}">جاري التحميل...</div></td>
-                        <td><button class="btn btn-danger btn-sm" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash"></i></button></td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="${mainImg}" class="prod-img">
+                                <div><b class="fs-5 d-block">${p.name}</b><small class="text-info">${p.price} ج.م</small></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-success"><i class="fas fa-thumbs-up"></i> ${p.likes || 0}</span><br>
+                            <span class="text-danger"><i class="fas fa-thumbs-down"></i> ${p.dislikes || 0}</span>
+                        </td>
+                        <td>
+                            <div class="admin-comment-box" id="comments-${doc.id}">جاري التحميل...</div>
+                        </td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash-alt"></i></button>
+                        </td>
                     </tr>`;
                 loadCommentsForAdmin(doc.id);
             });
@@ -260,15 +348,15 @@
         db.collection("gifts").doc(productId).collection("comments").orderBy("createdAt", "desc").onSnapshot(snap => {
             const container = document.getElementById(`comments-${productId}`);
             if(!container) return;
-            container.innerHTML = snap.empty ? '<small>لا توجد تعليقات</small>' : '';
+            container.innerHTML = snap.empty ? '<small class="text-muted">لا يوجد تعليقات بعد</small>' : '';
             snap.forEach(cDoc => {
                 const c = cDoc.data();
                 container.innerHTML += `
-                    <div class="d-flex justify-content-between align-items-center mb-1 p-1 border-bottom border-secondary">
-                        <small style="${c.pinned?'color:#00d4ff; font-weight:bold':''}">${c.pinned?'📌 ':''}${c.text}</small>
-                        <div>
-                            <button class="btn btn-sm p-0 text-info" onclick="togglePin('${productId}', '${cDoc.id}', ${c.pinned})"><i class="fas fa-thumbtack"></i></button>
-                            <button class="btn btn-sm p-0 text-danger ms-1" onclick="deleteComment('${productId}', '${cDoc.id}')"><i class="fas fa-times"></i></button>
+                    <div class="comment-item-admin ${c.pinned ? 'is-pinned' : ''}">
+                        <span class="text-truncate" style="max-width:200px;">${c.text}</span>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm p-0 text-warning" onclick="togglePin('${productId}', '${cDoc.id}', ${c.pinned})"><i class="fas fa-thumbtack"></i></button>
+                            <button class="btn btn-sm p-0 text-danger" onclick="deleteComment('${productId}', '${cDoc.id}')"><i class="fas fa-times-circle"></i></button>
                         </div>
                     </div>`;
             });
@@ -277,19 +365,28 @@
 
     async function togglePin(pId, cId, current) {
         await db.collection("gifts").doc(pId).collection("comments").doc(cId).update({ pinned: !current });
+        saikoToast(current ? "تم إلغاء التثبيت" : "تم تثبيت التعليق بنجاح 📌");
     }
 
     async function deleteComment(pId, cId) {
-        if(confirm("حذف التعليق؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
+        if(confirm("حذف التعليق نهائياً؟")) {
+            await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
+            saikoToast("تم حذف التعليق 🗑️", false);
+        }
     }
 
-    async function deleteItem(id) { if(confirm("حذف المنتج؟")) await db.collection("gifts").doc(id).delete(); }
+    async function deleteItem(id) { 
+        if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+            await db.collection("gifts").doc(id).delete();
+            saikoToast("تم حذف المنتج بنجاح 🗑️", false);
+        }
+    }
 
     function filterProducts() {
         let input = document.getElementById('admin-search').value.toLowerCase();
         let rows = document.getElementById('product-list').getElementsByTagName('tr');
         for (let row of rows) {
-            let name = row.getElementsByTagName('td')[1].innerText.toLowerCase();
+            let name = row.getElementsByTagName('td')[0].innerText.toLowerCase();
             row.style.display = name.includes(input) ? "" : "none";
         }
     }
