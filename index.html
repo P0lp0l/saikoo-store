@@ -8,52 +8,105 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { background: #0f0c29; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-        .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; }
-        .carousel-item img { height: 350px; object-fit: cover; border-radius: 15px; width: 100%; background: #24243e; }
         
-        .reaction-container { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
-        .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; user-select: none; }
-        .vote-text { font-size: 1.2rem; font-weight: bold; color: rgba(255,255,255,0.4); transition: 0.3s; }
-        .count-label { font-size: 1rem; color: white; opacity: 0.8; }
-        .active-like .vote-text { color: #28a745 !important; text-shadow: 0 0 15px #28a745, 0 0 25px #28a745; }
-        .active-dislike .vote-text { color: #dc3545 !important; text-shadow: 0 0 15px #dc3545, 0 0 25px #dc3545; }
+        /* تأثير موجات البحر الملونة في الخلفية */
+        body { 
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(270deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+            background-size: 800% 800%;
+            animation: waveGradient 15s ease infinite;
+            color: white;
+        }
 
-        .comments-area { background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 12px; margin-top: 15px; max-height: 250px; overflow-y: auto; border: 1px solid #00d4ff; text-align: right; }
-        .comment-item { background: #1a1a3a; padding: 10px; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
-        .pinned-comment { border: 1px solid #ff4d94 !important; background: rgba(255, 77, 148, 0.1) !important; }
-        .comment-text { font-size: 0.95rem; color: #fff; line-height: 1.4; }
-        .del-btn { color: #ff4d4d; font-size: 0.75rem; cursor: pointer; float: left; font-weight: bold; border: none; background: none; }
+        @keyframes waveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        .comment-input-group { display: flex; gap: 8px; margin-top: 12px; }
-        .comment-field { background: rgba(255,255,255,0.1); border: 2px solid #00d4ff; color: white; border-radius: 20px; padding: 8px 15px; flex-grow: 1; outline: none; }
-        .send-btn { background: #00d4ff; border: none; border-radius: 50%; width: 40px; height: 40px; color: #0f0c29; display: flex; align-items: center; justify-content: center; }
+        /* حاوية الذرات المتساقطة */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* خلف المحتوى */
+        }
 
-        .price { color: #ff4d94; font-size: 1.6rem; font-weight: bold; margin-bottom: 15px; }
-        .btn-wa { background: #25d366; color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; text-align: center; }
+        .container { position: relative; z-index: 1; }
+
+        .gift-card { 
+            background: rgba(255, 255, 255, 0.08); 
+            border-radius: 25px; 
+            border: 1px solid rgba(255, 77, 148, 0.3); 
+            padding: 20px; 
+            margin-bottom: 30px; 
+            backdrop-filter: blur(10px); /* تأثير زجاجي */
+            transition: 0.4s;
+        }
+        .gift-card:hover { transform: translateY(-10px); border-color: #00d4ff; }
+
+        .carousel-item img { height: 350px; object-fit: cover; border-radius: 20px; width: 100%; }
         
-        footer { border-top: 1px solid rgba(0, 212, 255, 0.3); padding: 40px 0; margin-top: 50px; }
-        .footer-signature { font-size: 1.5rem; font-weight: 700; color: #00d4ff; text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        /* الكلمات المضيئة */
+        .reaction-container { display: flex; justify-content: center; gap: 40px; margin: 25px 0; }
+        .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; user-select: none; }
+        .vote-text { font-size: 1.2rem; font-weight: bold; color: rgba(255,255,255,0.3); transition: 0.3s; }
+        .active-like .vote-text { color: #00ff88 !important; text-shadow: 0 0 20px #00ff88; }
+        .active-dislike .vote-text { color: #ff4d4d !important; text-shadow: 0 0 20px #ff4d4d; }
+
+        .comments-area { background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 15px; margin-top: 15px; max-height: 250px; overflow-y: auto; border: 1px solid rgba(0, 212, 255, 0.2); }
+        .comment-item { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .pinned-comment { border: 1.5px solid #ff4d94 !important; background: rgba(255, 77, 148, 0.15) !important; }
+
+        .price { color: #00d4ff; font-size: 1.8rem; font-weight: bold; margin: 15px 0; text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        .btn-wa { background: linear-gradient(45deg, #25d366, #128c7e); color: white; border-radius: 50px; font-weight: bold; padding: 12px; text-decoration: none; display: block; transition: 0.3s; }
+        .btn-wa:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
+        
+        footer { border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 50px 0; margin-top: 60px; backdrop-filter: blur(5px); }
+        .footer-signature { font-size: 2rem; font-weight: 800; letter-spacing: 2px; color: #00d4ff; text-shadow: 0 0 15px #00d4ff; }
     </style>
 </head>
 <body>
 
+<div id="particles-js"></div>
+
 <div class="container py-5 text-center">
-    <h1 class="display-4 mb-4" style="font-weight:700; color:#00d4ff;">SAIKO Store</h1>
+    <h1 class="display-3 mb-5" style="font-weight:900; color:#fff; text-shadow: 0 0 20px #ff4d94;">SAIKO Store</h1>
     <div id="products-list" class="row justify-content-center"></div>
 </div>
 
 <footer class="text-center">
     <div class="footer-signature">SAIKO Store</div>
-    <p class="mt-2" style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">
+    <p class="mt-3" style="color: rgba(255,255,255,0.6);">
         &copy; 2026 جميع الحقوق محفوظة <br>
-        <span style="color: #ff4d94;">صنع بكل حب لعشاق التميز 🦅</span>
+        <span style="color: #ff4d94; font-weight: bold;">صنع بكل حب لعشاق التميز 🦅</span>
     </p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
 <script>
+    // إعداد الذرات المتساقطة (Particles)
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 80 },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": true },
+            "size": { "value": 3, "random": true },
+            "move": { "enable": true, "speed": 2, "direction": "bottom", "random": false, "straight": false, "out_mode": "out" }
+        },
+        "interactivity": { "events": { "onhover": { "enable": true, "mode": "repulse" } } }
+    });
+
+    // إعداد Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0",
         authDomain: "flafilo-store.firebaseapp.com",
@@ -69,24 +122,7 @@
         localStorage.setItem('saiko_user_id', 'u_' + Math.random().toString(36).substr(2, 9));
     }
 
-    async function handleVote(id, type) {
-        const key = `voted_${id}`;
-        const lastAction = localStorage.getItem(key);
-        const docRef = db.collection("gifts").doc(id);
-        const batch = db.batch();
-        if (lastAction === type) {
-            batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(-1) });
-            localStorage.removeItem(key);
-        } else if (!lastAction) {
-            batch.update(docRef, { [type]: firebase.firestore.FieldValue.increment(1) });
-            localStorage.setItem(key, type);
-        } else {
-            batch.update(docRef, { [lastAction]: firebase.firestore.FieldValue.increment(-1), [type]: firebase.firestore.FieldValue.increment(1) });
-            localStorage.setItem(key, type);
-        }
-        await batch.commit();
-    }
-
+    // جلب المنتجات
     db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
         const list = document.getElementById('products-list');
         list.innerHTML = '';
@@ -104,21 +140,21 @@
                             <div class="carousel-inner">${carouselItems}</div>
                             ${imgs.length > 1 ? `<button class="carousel-control-prev" data-bs-target="#${carouselId}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : ''}
                         </div>
-                        <h3 class="mt-3">${data.name}</h3>
+                        <h3 class="mt-4">${data.name}</h3>
                         <div class="reaction-container">
                             <div class="react-group ${choice === 'likes' ? 'active-like' : ''}" onclick="handleVote('${doc.id}', 'likes')">
                                 <span class="vote-text">أعجبني</span>
-                                <span class="count-label">${data.likes || 0}</span>
+                                <span class="badge bg-dark">${data.likes || 0}</span>
                             </div>
                             <div class="react-group ${choice === 'dislikes' ? 'active-dislike' : ''}" onclick="handleVote('${doc.id}', 'dislikes')">
                                 <span class="vote-text">لم يعجبني</span>
-                                <span class="count-label">${data.dislikes || 0}</span>
+                                <span class="badge bg-dark">${data.dislikes || 0}</span>
                             </div>
                         </div>
                         <p class="price">${data.price} ج.م</p>
                         <a href="https://wa.me/201289984200?text=طلب: ${data.name}" class="btn-wa">طلب عبر واتساب</a>
-                        <div class="comments-area" id="box-${doc.id}"><small style="color:#00d4ff">جاري تحميل التعليقات...</small></div>
-                        <div class="comment-input-group">
+                        <div class="comments-area" id="box-${doc.id}"></div>
+                        <div class="comment-input-group mt-3">
                             <input type="text" id="inp-${doc.id}" class="comment-field" placeholder="اكتب تعليقاً...">
                             <button onclick="addComment('${doc.id}')" class="send-btn"><i class="fas fa-paper-plane"></i></button>
                         </div>
@@ -128,28 +164,33 @@
         });
     });
 
+    async function handleVote(id, type) {
+        const key = `voted_${id}`;
+        const lastAction = localStorage.getItem(key);
+        const docRef = db.collection("gifts").doc(id);
+        if (lastAction === type) {
+            await docRef.update({ [type]: firebase.firestore.FieldValue.increment(-1) });
+            localStorage.removeItem(key);
+        } else if (!lastAction) {
+            await docRef.update({ [type]: firebase.firestore.FieldValue.increment(1) });
+            localStorage.setItem(key, type);
+        }
+    }
+
     function loadComments(id) {
-        // حذفنا الـ orderBy المزدوج هنا عشان التعليقات تظهر بدون مشاكل Index
         db.collection("gifts").doc(id).collection("comments").orderBy("createdAt", "asc").onSnapshot(snap => {
             const area = document.getElementById(`box-${id}`);
             if(!area) return;
-            
-            // تحويل البيانات لمصفوفة لترتيبها يدوياً
             let commentsArr = [];
             snap.forEach(d => commentsArr.push({id: d.id, ...d.data()}));
-            
-            // ترتيب: المثبت أولاً
             commentsArr.sort((a, b) => (b.isPinned || false) - (a.isPinned || false));
-
-            area.innerHTML = commentsArr.length === 0 ? '<small class="text-muted">لا توجد تعليقات بعد..</small>' : '';
+            area.innerHTML = commentsArr.length === 0 ? '<small class="text-muted">لا توجد تعليقات..</small>' : '';
             const myId = localStorage.getItem('saiko_user_id');
-            
             commentsArr.forEach(c => {
-                const pinIcon = c.isPinned ? '<i class="fas fa-thumbtack" style="color: #ff4d94; margin-left: 5px; font-size: 0.8rem;"></i>' : '';
                 area.innerHTML += `
                     <div class="comment-item ${c.isPinned ? 'pinned-comment' : ''}">
                         ${(c.userId === myId && !c.isPinned) ? `<button onclick="deleteComment('${id}', '${c.id}')" class="del-btn">حذف</button>` : ''}
-                        <div class="comment-text">${pinIcon}${c.text}</div>
+                        <div class="comment-text">${c.isPinned ? '📌 ' : ''}${c.text}</div>
                     </div>`;
             });
         });
@@ -168,7 +209,7 @@
     }
 
     async function deleteComment(pId, cId) {
-        if(confirm("هل تريد حذف تعليقك؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
+        if(confirm("حذف التعليق؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
