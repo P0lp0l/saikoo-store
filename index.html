@@ -12,7 +12,6 @@
         .gift-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid #ff4d94; padding: 15px; margin-bottom: 25px; }
         .carousel-item img { height: 350px; object-fit: cover; border-radius: 15px; width: 100%; background: #24243e; }
         
-        /* الكلمات المضيئة */
         .reaction-container { display: flex; justify-content: center; gap: 40px; margin: 20px 0; }
         .react-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; user-select: none; }
         .vote-text { font-size: 1.2rem; font-weight: bold; color: rgba(255,255,255,0.4); transition: 0.3s; }
@@ -70,7 +69,6 @@
         localStorage.setItem('saiko_user_id', 'u_' + Math.random().toString(36).substr(2, 9));
     }
 
-    // دالة التفاعل
     async function handleVote(id, type) {
         const key = `voted_${id}`;
         const lastAction = localStorage.getItem(key);
@@ -89,7 +87,6 @@
         await batch.commit();
     }
 
-    // جلب المنتجات
     db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snap => {
         const list = document.getElementById('products-list');
         list.innerHTML = '';
@@ -131,29 +128,30 @@
         });
     });
 
-    // جلب التعليقات مع ميزة الترتيب حسب التثبيت (Pinned)
     function loadComments(id) {
-        db.collection("gifts").doc(id).collection("comments")
-          .orderBy("isPinned", "desc") 
-          .orderBy("createdAt", "asc")
-          .onSnapshot(snap => {
+        // حذفنا الـ orderBy المزدوج هنا عشان التعليقات تظهر بدون مشاكل Index
+        db.collection("gifts").doc(id).collection("comments").orderBy("createdAt", "asc").onSnapshot(snap => {
             const area = document.getElementById(`box-${id}`);
             if(!area) return;
-            area.innerHTML = snap.empty ? '<small class="text-muted">لا توجد تعليقات بعد..</small>' : '';
+            
+            // تحويل البيانات لمصفوفة لترتيبها يدوياً
+            let commentsArr = [];
+            snap.forEach(d => commentsArr.push({id: d.id, ...d.data()}));
+            
+            // ترتيب: المثبت أولاً
+            commentsArr.sort((a, b) => (b.isPinned || false) - (a.isPinned || false));
+
+            area.innerHTML = commentsArr.length === 0 ? '<small class="text-muted">لا توجد تعليقات بعد..</small>' : '';
             const myId = localStorage.getItem('saiko_user_id');
             
-            snap.forEach(cDoc => {
-                const c = cDoc.data();
+            commentsArr.forEach(c => {
                 const pinIcon = c.isPinned ? '<i class="fas fa-thumbtack" style="color: #ff4d94; margin-left: 5px; font-size: 0.8rem;"></i>' : '';
-                
                 area.innerHTML += `
                     <div class="comment-item ${c.isPinned ? 'pinned-comment' : ''}">
-                        ${(c.userId === myId && !c.isPinned) ? `<button onclick="deleteComment('${id}', '${cDoc.id}')" class="del-btn">حذف</button>` : ''}
+                        ${(c.userId === myId && !c.isPinned) ? `<button onclick="deleteComment('${id}', '${c.id}')" class="del-btn">حذف</button>` : ''}
                         <div class="comment-text">${pinIcon}${c.text}</div>
                     </div>`;
             });
-        }, error => {
-            console.log("تنبيه: قد تحتاج لتفعيل Index في Firebase للترتيب المزدوج.");
         });
     }
 
@@ -163,16 +161,14 @@
         await db.collection("gifts").doc(id).collection("comments").add({
             text: inp.value,
             userId: localStorage.getItem('saiko_user_id'),
-            isPinned: false, // افتراضياً غير مثبت
+            isPinned: false,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         inp.value = '';
     }
 
     async function deleteComment(pId, cId) {
-        if(confirm("هل تريد حذف تعليقك؟")) {
-            await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
-        }
+        if(confirm("هل تريد حذف تعليقك؟")) await db.collection("gifts").doc(pId).collection("comments").doc(cId).delete();
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
