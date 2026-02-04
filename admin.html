@@ -30,7 +30,7 @@
             100% { background-position: 50% 0%; }
         }
 
-        /* توضيح الخانات تماماً */
+        /* توضيح الخانات */
         .form-control { 
             background: rgba(255, 255, 255, 1) !important; 
             border: 3px solid #ff4d94;
@@ -61,14 +61,15 @@
             transition: 0.3s;
         }
 
+        /* ستايل صناديق الإحصائيات المدمجة */
         .stat-box { 
-            background: rgba(0, 0, 0, 0.3); 
-            border-radius: 20px; padding: 15px; text-align: center;
-            border: 1px solid #00d4ff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.4); 
+            border-radius: 20px; padding: 20px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .stat-box h3 { color: #00d4ff; font-weight: 900; margin-bottom: 0; }
-        .stat-box small { color: #eee; font-size: 0.8rem; }
+        .stat-box small { color: #eee; font-size: 0.85rem; font-weight: bold; }
 
         .table { color: #fff; background: rgba(0,0,0,0.3); border-radius: 15px; }
         .prod-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 2px solid #fff; }
@@ -88,8 +89,6 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .is-pinned-admin { border-right: 4px solid #00d4ff; background: rgba(0,212,255,0.2); }
-
-        .made-by { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -110,20 +109,38 @@
         <p class="small mb-3">تواصل مع <b>SAIKO</b> لتنشيط حسابك، أو لطلب تصميم موقع احترافي خاص بك مثل هذا المتجر! ✨</p>
         <a href="https://wa.me/201289984200" class="btn-wa"><i class="fab fa-whatsapp"></i> تواصل مع المصمم الآن</a>
     </div>
-    <div class="text-center made-by">Made with ❤️ by SAIKO</div>
 </div>
 
 <div id="admin-content" class="container" style="display: none;">
     <div class="d-flex justify-content-between align-items-center mb-4 bg-dark p-3 rounded-pill shadow">
-        <h5 class="mb-0">إدارة متجر سايكو ⚙️</h5>
+        <h5 class="mb-0 px-3">إدارة المتجر ⚙️</h5>
         <button class="btn btn-danger btn-sm rounded-pill px-3" onclick="logout()">خروج <i class="fas fa-sign-out-alt"></i></button>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3"><div class="stat-box"><small>زوار اليوم</small><h3 id="stat-day">0</h3></div></div>
-        <div class="col-6 col-md-3"><div class="stat-box"><small>زوار الشهر</small><h3 id="stat-month">0</h3></div></div>
-        <div class="col-6 col-md-3"><div class="stat-box"><small>زوار السنة</small><h3 id="stat-year">0</h3></div></div>
-        <div class="col-6 col-md-3"><div class="stat-box"><small>إجمالي الإعجابات</small><h3 id="total-likes">0</h3></div></div>
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-12 col-md-6">
+            <div class="stat-box d-flex justify-content-around align-items-center" style="border-color: #ff4d94;">
+                <div>
+                    <small>القطع 📦</small>
+                    <h3 id="total-p">0</h3>
+                </div>
+                <div style="width: 2px; height: 40px; background: rgba(255,255,255,0.2);"></div>
+                <div>
+                    <small>الإعجابات 👍</small>
+                    <h3 id="total-likes">0</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+            <div class="stat-box">
+                <small>الزيارات (يوم | شهر | سنة) 📊</small>
+                <h3 id="visitor-summary">0 | 0 | 0</h3>
+                <p class="mb-0 mt-1" style="font-size: 0.75rem; color: #00d4ff; font-weight: bold;">
+                    إجمالي الزيارات العام: <span id="total-v-all">0</span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <div class="glass-card">
@@ -134,7 +151,7 @@
             <div class="col-12">
                 <div class="p-3 text-center" style="border: 2px dashed #fff; border-radius: 15px; cursor: pointer;" onclick="document.getElementById('p-files').click()">
                     <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                    <p>ارفع صور المنتج الجديد</p>
+                    <p>ارفع صور المنتج</p>
                     <input type="file" id="p-files" hidden multiple onchange="handleFiles(this.files)">
                 </div>
                 <div id="preview-container" class="d-flex flex-wrap gap-2 mt-2 justify-content-center"></div>
@@ -230,6 +247,7 @@
             const list = document.getElementById('product-list');
             list.innerHTML = '';
             let totalL = 0;
+            document.getElementById('total-p').innerText = snap.size;
             snap.forEach(doc => {
                 const p = doc.data();
                 totalL += (p.likes || 0);
@@ -287,16 +305,16 @@
         const dateStr = now.toISOString().split('T')[0];
         const monthStr = dateStr.substring(0, 7);
         const yearStr = dateStr.substring(0, 4);
+        let vD = 0, vM = 0, vY = 0;
 
-        db.collection("stats").doc("daily").collection("days").doc(dateStr).onSnapshot(d => {
-            document.getElementById('stat-day').innerText = d.exists ? d.data().count : 0;
-        });
-        db.collection("stats").doc("monthly").collection("months").doc(monthStr).onSnapshot(d => {
-            document.getElementById('stat-month').innerText = d.exists ? d.data().count : 0;
-        });
-        db.collection("stats").doc("yearly").collection("years").doc(yearStr).onSnapshot(d => {
-            document.getElementById('stat-year').innerText = d.exists ? d.data().count : 0;
-        });
+        const updateUI = () => {
+            document.getElementById('visitor-summary').innerText = `${vD} | ${vM} | ${vY}`;
+            document.getElementById('total-v-all').innerText = vD + vM + vY;
+        };
+
+        db.collection("stats").doc("daily").collection("days").doc(dateStr).onSnapshot(d => { vD = d.exists ? d.data().count : 0; updateUI(); });
+        db.collection("stats").doc("monthly").collection("months").doc(monthStr).onSnapshot(d => { vM = d.exists ? d.data().count : 0; updateUI(); });
+        db.collection("stats").doc("yearly").collection("years").doc(yearStr).onSnapshot(d => { vY = d.exists ? d.data().count : 0; updateUI(); });
     }
 </script>
 </body>
