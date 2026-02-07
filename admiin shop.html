@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIKO Admin | لوحة الإدارة الاحترافية 👑</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; padding: 0; overflow-x: hidden;
+            background: linear-gradient(0deg, #0f0c29, #302b63, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff; min-height: 100vh; padding: 15px;
+        }
+
+        @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.1); border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2); padding: 20px; margin-bottom: 20px;
+            backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .form-control { 
+            background: #fff !important; border: 2px solid #ff4d94;
+            color: #000 !important; font-weight: 700; border-radius: 10px;
+        }
+
+        .btn-action {
+            border-radius: 50px; font-weight: 700; padding: 8px 20px; transition: 0.3s;
+            border: none; color: white; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-delete-all { background: #e74c3c; }
+        .btn-lock-all { background: #f39c12; }
+        .btn-saiko { background: #ff4d94; box-shadow: 0 4px 15px rgba(255,77,148,0.3); }
+
+        .stat-box { 
+            background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 15px; 
+            text-align: center; border-left: 5px solid #ff4d94;
+        }
+        .stat-box h3 { color: #00d4ff; font-weight: 900; margin: 5px 0; }
+
+        /* منطقة معاينة الصور */
+        .preview-wrapper {
+            display: flex; flex-wrap: wrap; gap: 15px; padding: 15px;
+            background: rgba(0,0,0,0.2); border-radius: 15px; min-height: 100px;
+        }
+        .img-item { position: relative; width: 80px; height: 80px; }
+        .img-item img { width: 100%; height: 100%; border-radius: 10px; object-fit: cover; border: 2px solid #ff4d94; }
+        .img-item .remove-btn {
+            position: absolute; top: -8px; right: -8px; background: #e74c3c;
+            color: white; border-radius: 50%; width: 22px; height: 22px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; cursor: pointer; border: 2px solid white; z-index: 10;
+        }
+        .img-item .edit-btn {
+            position: absolute; bottom: -8px; left: -8px; background: #2575fc;
+            color: white; border-radius: 50%; width: 22px; height: 22px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; cursor: pointer; border: 2px solid white; z-index: 10;
+        }
+
+        .prod-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; border: 2px solid #ff4d94; }
+        
+        .comment-item {
+            background: rgba(255,255,255,0.05); border-radius: 8px;
+            padding: 6px; margin-bottom: 5px; font-size: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-right: 3px solid #6a11cb;
+        }
+        .is-pinned-admin { border-right-color: #00d4ff; background: rgba(0,212,255,0.1); }
+
+        .pin-btn { font-size: 1.1rem; transition: 0.3s; cursor: pointer; }
+        .pin-active { color: #FFD700 !important; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .pin-inactive { color: #ffffff !important; opacity: 0.6; }
+
+        .marketing-box { text-align: center; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 15px; margin-top: 20px; font-size: 0.85rem; }
+        .signature { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 30px; letter-spacing: 1px; }
+        .crop-container { max-width: 100%; height: 400px; background: #000; overflow: hidden; }
+        
+        /* تخصيصات قسم الترخيص */
+        .license-info {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 77, 148, 0.5);
+        }
+        
+        .license-countdown {
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255, 77, 148, 0.2);
+            display: inline-block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- قسم تسجيل الدخول -->
+<div id="login-section" class="glass-card" style="max-width: 400px; margin: 60px auto;">
+    <h3 class="text-center mb-4 fw-black">SAIKO ADMIN 👑</h3>
+    <input type="email" id="login-email" class="form-control mb-3" placeholder="البريد الإلكتروني">
+    <input type="password" id="login-password" class="form-control mb-3" placeholder="كلمة المرور">
+    <div class="mb-3 px-2">
+        <label style="cursor:pointer; font-size: 0.9rem;">
+            <input type="checkbox" id="rememberMe"> تذكرني دائماً 💾
+        </label>
+    </div>
+    <button class="btn-action btn-saiko w-100" onclick="login()">دخول 🚀</button>
+    <div class="marketing-box">
+        <p class="mb-2">تواصل مع <b>SAIKO</b> لتنشيط حسابك، أو لطلب تصميم موقع احترافي خاص بك مثل هذا المتجر! ✨</p>
+        <a href="https://wa.me/201553179352" class="btn-action" style="background:#25d366; text-decoration:none;">
+            <i class="fab fa-whatsapp"></i> تواصل مع المصمم الآن
+        </a>
+    </div>
+</div>
+
+<!-- قسم تفعيل الترخيص (يظهر بعد تسجيل الدخول مباشرة) -->
+<div id="license-section" class="glass-card" style="max-width: 500px; margin: 40px auto; display: none;">
+    <h3 class="text-center mb-4 fw-bold">🔐 تفعيل النظام SAIKO</h3>
+    <p class="text-center mb-3">أدخل كود الترخيص الممنوح لك</p>
+    
+    <div class="mb-3">
+        <label class="form-label">البريد الإلكتروني</label>
+        <input type="email" id="license-email" class="form-control" placeholder="بريدك المستخدم في التسجيل">
+    </div>
+    
+    <div class="mb-4">
+        <label class="form-label">كود الترخيص</label>
+        <div class="input-group">
+            <input type="text" id="license-key" class="form-control" placeholder="SAIKO-XXXX-XXXX-XXXX">
+            <button class="btn btn-outline-light" type="button" onclick="pasteLicense()">
+                <i class="fas fa-paste"></i>
+            </button>
+        </div>
+        <small class="text-warning mt-1 d-block">
+            <i class="fas fa-exclamation-triangle"></i> هذا الكود يعمل مرة واحدة فقط على هذا الجهاز
+        </small>
+    </div>
+    
+    <div class="d-grid gap-2">
+        <button class="btn-action btn-saiko" onclick="activateLicense()">
+            <i class="fas fa-key"></i> تفعيل النظام
+        </button>
+        <button class="btn btn-outline-light" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> العودة لتسجيل الدخول
+        </button>
+    </div>
+    
+    <div class="mt-4 text-center">
+        <small class="text-muted">
+            ليس لديك ترخيص؟ 
+            <a href="https://wa.me/201553179352" style="color:#ff4d94; text-decoration:none;">
+                تواصل مع الدعم
+            </a>
+        </small>
+    </div>
+</div>
+
+<!-- المحتوى الرئيسي للإدارة (يظهر بعد تفعيل الترخيص) -->
+<div id="admin-content" class="container" style="display: none;">
+    
+    <!-- شريط معلومات الترخيص -->
+    <div id="license-info-bar" class="glass-card py-2 px-3 mb-3" style="background: rgba(0,0,0,0.4); border-left: 5px solid #ff4d94; display: none;">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <small><i class="fas fa-key me-1"></i> الترخيص: <span id="license-status-text" class="badge bg-success ms-1">نشط</span></small>
+                <span class="license-countdown" id="license-days-left"></span>
+            </div>
+            <div>
+                <small id="license-expiry-date" class="me-3"></small>
+                <button class="btn btn-sm btn-outline-info" onclick="checkLicenseStatus()">
+                    <i class="fas fa-sync-alt"></i> تحديث
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- رأس الصفحة -->
+    <div class="d-flex justify-content-between align-items-center mb-4 glass-card py-2 px-4">
+        <h5 class="mb-0">إدارة المتجر ⚙️</h5>
+        <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="logout()">خروج</button>
+    </div>
+
+    <!-- إحصائيات -->
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <small>القطع 📦</small><h3 id="total-p">0</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <small>الإعجابات 👍</small><h3 id="total-likes">0</h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="stat-box" style="border-left-color: #00d4ff;">
+                <small>إجمالي زيارات السنة 📊</small>
+                <h3 id="total-v-all">0</h3>
+                <button onclick="resetStats()" class="btn btn-sm btn-link p-0 text-warning" style="font-size: 0.65rem; text-decoration: none;">تصفير عداد الزوار</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- أزرار التحكم الجماعي -->
+    <div class="glass-card d-flex flex-wrap gap-2 justify-content-center">
+        <button class="btn-action btn-lock-all" onclick="bulkToggleComments(true)">
+            <i class="fas fa-comment-slash"></i> قفل كل التعليقات
+        </button>
+        <button class="btn-action btn-lock-all" style="background:#2ecc71" onclick="bulkToggleComments(false)">
+            <i class="fas fa-comments"></i> فتح كل التعليقات
+        </button>
+        <button class="btn-action btn-delete-all" onclick="bulkDeleteComments()">
+            <i class="fas fa-eraser"></i> مسح جميع التعليقات
+        </button>
+    </div>
+
+    <!-- إضافة منتج جديد -->
+    <div class="glass-card">
+        <h6 class="mb-3 fw-bold">إضافة قطعة جديدة 🎨</h6>
+        <div class="row g-2">
+            <div class="col-md-5"><input type="text" id="p-name" class="form-control" placeholder="اسم المنتج"></div>
+            <div class="col-md-3"><input type="number" id="p-price" class="form-control" placeholder="السعر"></div>
+            <div class="col-md-4">
+                <button class="btn-action btn-saiko w-100" onclick="document.getElementById('p-files').click()">
+                    <i class="fas fa-images"></i> اختيار الصور
+                </button>
+                <input type="file" id="p-files" hidden multiple accept="image/*" onchange="handleNewFiles(this.files)">
+            </div>
+            <div class="col-12 mt-3">
+                <div id="preview-container" class="preview-wrapper"></div>
+            </div>
+            <button class="btn-action btn-saiko w-100 mt-2" onclick="uploadAndPublish()">نشر في المتجر ✨</button>
+        </div>
+    </div>
+
+    <!-- البحث -->
+    <div style="margin-bottom: 15px;">
+        <input type="text" id="adminSearchInput" class="form-control" placeholder="🔍 ابحث عن منتج بالاسم أو السعر..." onkeyup="filterAdminProducts()">
+    </div>
+
+    <!-- جدول المنتجات -->
+    <div class="glass-card border-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr><th>المنتج</th><th>السعر</th><th>التعليقات</th><th>إجراء</th></tr>
+                </thead>
+                <tbody id="product-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- التوقيع -->
+    <div class="signature">BY: SAIKO • 2024 ©</div>
+</div>
+
+<!-- المكتبات -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+    // ==================== تكوين Firebase ====================
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDBfSCT_wePT2RexgcxZaz9NT9gWmXxgz0", 
+        authDomain: "flafilo-store.firebaseapp.com", 
+        projectId: "flafilo-store", 
+        storageBucket: "flafilo-store.firebasestorage.app", 
+        messagingSenderId: "470812703135", 
+        appId: "1:470812703135:web:ee2359353b3ad64b36a5aa" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ==================== المتغيرات العامة ====================
+    let imagesData = [];
+    let deviceId = localStorage.getItem('saiko_device_id');
+    let currentLicense = null;
+    let licenseCheckInterval = null;
+
+    // ==================== توليد معرف الجهاز ====================
+    if (!deviceId) {
+        deviceId = 'SAIKO_DEVICE_' + Date.now() + '_' + 
+                  navigator.userAgent.substring(0, 50).replace(/\s+/g, '_') + '_' + 
+                  Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('saiko_device_id', deviceId);
+    }
+
+    // ==================== دوال مساعدة ====================
+    function saikoToast(msg) { 
+        Toastify({ 
+            text: msg, 
+            duration: 2000, 
+            style: { 
+                background: "#ff4d94",
+                borderRadius: "10px",
+                fontWeight: "bold"
+            },
+            offset: {
+                y: 70
+            }
+        }).showToast(); 
+    }
+
+    // ==================== نظام المصادقة ====================
+    auth.onAuthStateChanged(async user => {
+        const loginSection = document.getElementById('login-section');
+        const licenseSection = document.getElementById('license-section');
+        const adminContent = document.getElementById('admin-content');
+        
+        // إخفاء كل الأقسام أولاً
+        loginSection.style.display = 'none';
+        licenseSection.style.display = 'none';
+        adminContent.style.display = 'none';
+        
+        if (user) {
+            // مستخدم مسجل - التحقق من الترخيص
+            const hasValidLicense = await checkLicense();
+            
+            if (hasValidLicense) {
+                // ترخيص صالح - عرض لوحة التحكم
+                adminContent.style.display = 'block';
+                document.getElementById('license-info-bar').style.display = 'flex';
+                loadProducts();
+                loadVisitorStats();
+                updateLicenseInfo();
+                
+                // بدء التحقق الدوري من الترخيص (كل ساعة)
+                if (licenseCheckInterval) clearInterval(licenseCheckInterval);
+                licenseCheckInterval = setInterval(async () => {
+                    await checkLicense();
+                }, 60 * 60 * 1000); // كل ساعة
+                
+            } else {
+                // لا يوجد ترخيص صالح - عرض قسم الترخيص
+                licenseSection.style.display = 'block';
+                // تعبئة البريد تلقائياً
+                document.getElementById('license-email').value = user.email;
+            }
+            
+        } else {
+            // لا يوجد مستخدم مسجل - عرض قسم الدخول
+            loginSection.style.display = 'block';
+        }
+    });
+
+    async function login() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        
+        const persistence = rememberMe ? 
+            firebase.auth.Auth.Persistence.LOCAL : 
+            firebase.auth.Auth.Persistence.SESSION;
+            
+        try {
+            await auth.setPersistence(persistence);
+            await auth.signInWithEmailAndPassword(email, password);
+            saikoToast("مرحباً بك! 👑");
+        } catch (err) {
+            saikoToast("بيانات الدخول غير صحيحة ❌");
+        }
+    }
+
+    function logout() {
+        if (licenseCheckInterval) clearInterval(licenseCheckInterval);
+        auth.signOut();
+    }
+
+    // ==================== نظام الترخيص ====================
+    async function checkLicense() {
+        const user = auth.currentUser;
+        if (!user) return false;
+        
+        const userEmail = user.email;
+        
+        try {
+            const licenseDoc = await db.collection('licenses').doc(userEmail).get();
+            
+            if (!licenseDoc.exists) {
+                showLicenseError('لا يوجد ترخيص لهذا البريد');
+                return false;
+            }
+            
+            const license = licenseDoc.data();
+            currentLicense = license;
+            
+            const now = new Date();
+            const expiryDate = license.expiryDate?.toDate ? license.expiryDate.toDate() : new Date(license.expiryDate);
+            
+            // التحقق من حالة الترخيص
+            if (license.status !== 'active') {
+                const errorMsg = {
+                    'pending': 'الترخيص بانتظار التفعيل',
+                    'expired': 'انتهت صلاحية الترخيص',
+                    'revoked': 'تم إلغاء الترخيص من قبل المسؤول',
+                    'suspended': 'الترخيص موقوف مؤقتاً'
+                }[license.status] || 'حالة الترخيص غير معروفة';
+                
+                showLicenseError(errorMsg);
+                return false;
+            }
+            
+            // التحقق من الجهاز
+            if (license.deviceId && license.deviceId !== deviceId) {
+                showLicenseError('الترخيص مفعل على جهاز آخر');
+                await auth.signOut();
+                return false;
+            }
+            
+            // التحقق من تاريخ الانتهاء
+            if (now > expiryDate) {
+                // تحديث الحالة تلقائياً
+                await db.collection('licenses').doc(userEmail).update({ 
+                    status: 'expired',
+                    lastCheck: new Date()
+                });
+                
+                showLicenseError('انتهت صلاحية الترخيص');
+                return false;
+            }
+            
+            // تحديث آخر تحقق
+            await db.collection('licenses').doc(userEmail).update({
+                lastCheck: new Date()
+            });
+            
+            return true;
+            
+        } catch (error) {
+            console.error('خطأ في التحقق من الترخيص:', error);
+            showLicenseError('خطأ في التحقق من الترخيص');
+            return false;
+        }
+    }
+
+    function showLicenseError(message) {
+        const licenseSection = document.getElementById('license-section');
+        const adminContent = document.getElementById('admin-content');
+        
+        adminContent.style.display = 'none';
+        document.getElementById('license-info-bar').style.display = 'none';
+        licenseSection.style.display = 'block';
+        
+        // تعبئة البريد تلقائياً
+        const user = auth.currentUser;
+        if (user) {
+            document.getElementById('license-email').value = user.email;
+        }
+        
+        Swal.fire({
+            title: 'مشكلة في الترخيص',
+            text: message,
+            icon: 'warning',
+            confirmButtonText: 'حسناً'
+        });
+    }
+
+    async function activateLicense() {
+        const licenseKey = document.getElementById('license-key').value.trim();
+        const userEmail = document.getElementById('license-email').value.trim();
+        const user = auth.currentUser;
+        
+        // التحقق من البيانات
+        if (!userEmail || !licenseKey) {
+            saikoToast('يرجى ملء جميع الحقول');
+            return;
+        }
+        
+        if (user && user.email !== userEmail) {
+            saikoToast('البريد لا يتطابق مع حسابك المسجل');
+            return;
+        }
+        
+        saikoToast('جاري التحقق... ⏳');
+        
+        try {
+            const licenseDoc = await db.collection('licenses').doc(userEmail).get();
+            
+            if (!licenseDoc.exists) {
+                saikoToast('الترخيص غير موجود');
+                return;
+            }
+            
+            const license = licenseDoc.data();
+            
+            // التحقق من صحة الكود
+            if (license.licenseKey !== licenseKey) {
+                saikoToast('كود الترخيص غير صحيح');
+                return;
+            }
+            
+            // التحقق من الحالة
+            if (license.status !== 'pending') {
+                const statusMsg = {
+                    'active': 'مفعل بالفعل',
+                    'expired': 'منتهي الصلاحية',
+                    'revoked': 'ملغى',
+                    'suspended': 'موقوف'
+                }[license.status] || 'غير صالح';
+                
+                saikoToast(`الترخيص ${statusMsg}`);
+                return;
+            }
+            
+            // التحقق من الجهاز (إذا كان مفعل مسبقاً)
+            if (license.deviceId && license.deviceId !== deviceId) {
+                Swal.fire({
+                    title: 'مستخدم على جهاز آخر',
+                    text: 'لا يمكن تفعيل نفس الترخيص على أكثر من جهاز',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً'
+                });
+                return;
+            }
+            
+            // تفعيل الترخيص
+            await db.collection('licenses').doc(userEmail).update({
+                status: 'active',
+                deviceId: deviceId,
+                activatedAt: new Date(),
+                lastCheck: new Date()
+            });
+            
+            saikoToast('✅ تم تفعيل النظام بنجاح!');
+            
+            // إعادة تحميل الصفحة
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+            
+        } catch (error) {
+            console.error('خطأ في التفعيل:', error);
+            saikoToast('خطأ في التفعيل ❌');
+        }
+    }
+
+    function updateLicenseInfo() {
+        if (!currentLicense) return;
+        
+        const expiryDate = currentLicense.expiryDate?.toDate ? 
+            currentLicense.expiryDate.toDate() : 
+            new Date(currentLicense.expiryDate);
+        
+        const now = new Date();
+        const daysLeft = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+        
+        // تحديث النصوص
+        document.getElementById('license-status-text').textContent = 'نشط';
+        document.getElementById('license-status-text').className = 'badge bg-success ms-1';
+        
+        document.getElementById('license-expiry-date').textContent = 
+            `ينتهي في: ${expiryDate.toLocaleDateString('ar-EG')}`;
+        
+        const daysLeftElement = document.getElementById('license-days-left');
+        if (daysLeft > 0) {
+            daysLeftElement.textContent = `⏳ ${daysLeft} يوم متبقي`;
+            daysLeftElement.style.background = daysLeft <= 7 ? 
+                'rgba(231, 76, 60, 0.3)' : 'rgba(46, 204, 113, 0.3)';
+        } else {
+            daysLeftElement.textContent = '⚠️ منتهي';
+            daysLeftElement.style.background = 'rgba(231, 76, 60, 0.5)';
+        }
+        
+        // إخفاء شريط الترخيص إذا كانت المدة غير محدودة
+        if (currentLicense.durationMonths === 999) {
+            document.getElementById('license-days-left').textContent = 'مدى الحياة ♾️';
+        }
+    }
+
+    async function checkLicenseStatus() {
+        saikoToast('جاري تحديث حالة الترخيص...');
+        await checkLicense();
+        if (currentLicense) {
+            updateLicenseInfo();
+            saikoToast('تم التحديث ✅');
+        }
+    }
+
+    function pasteLicense() {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText()
+                .then(text => {
+                    document.getElementById('license-key').value = text;
+                    saikoToast('تم لصق الكود 📋');
+                })
+                .catch(() => {
+                    manualPaste();
+                });
+        } else {
+            manualPaste();
+        }
+    }
+
+    function manualPaste() {
+        document.getElementById('license-key').focus();
+        document.execCommand('paste');
+        saikoToast('استخدم Ctrl+V للصق');
+    }
+
+    // ==================== إدارة المنتجات ====================
+    function handleNewFiles(files) {
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagesData.push({ 
+                    id: Date.now() + Math.random(), 
+                    data: e.target.result, 
+                    file: file, 
+                    isCropped: false 
+                });
+                renderPreviews();
+            };
+            reader.readAsDataURL(file);
+        });
+        document.getElementById('p-files').value = '';
+    }
+
+    function renderPreviews() {
+        const container = document.getElementById('preview-container');
+        container.innerHTML = '';
+        imagesData.forEach(img => {
+            const div = document.createElement('div');
+            div.className = 'img-item';
+            div.innerHTML = `
+                <img src="${img.data}">
+                <div class="remove-btn" onclick="removeImage(${img.id})">×</div>
+                <div class="edit-btn" onclick="cropImage(${img.id})">
+                    <i class="fas fa-pen"></i>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function removeImage(id) { 
+        imagesData = imagesData.filter(i => i.id !== id); 
+        renderPreviews(); 
+    }
+
+    function cropImage(id) {
+        const img = imagesData.find(i => i.id === id);
+        Swal.fire({
+            title: 'تعديل الصورة (قص حر)',
+            html: `<div class="crop-container"><img id="cropTarget" src="${img.data}"></div>`,
+            showCancelButton: true, 
+            confirmButtonText: 'حفظ التعديل',
+            cancelButtonText: 'إلغاء',
+            width: '700px',
+            didOpen: () => { 
+                window.currentCropper = new Cropper(document.getElementById('cropTarget'), { 
+                    aspectRatio: NaN, 
+                    viewMode: 1, 
+                    autoCropArea: 0.8
+                }); 
+            },
+            preConfirm: () => { 
+                return new Promise(resolve => {
+                    window.currentCropper.getCroppedCanvas().toBlob(blob => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.9);
+                }); 
+            }
+        }).then(result => {
+            if (result.isConfirmed) {
+                const reader = new FileReader();
+                reader.onload = (e) => { 
+                    img.data = e.target.result; 
+                    img.blob = result.value; 
+                    img.isCropped = true; 
+                    renderPreviews(); 
+                };
+                reader.readAsDataURL(result.value);
+            }
+        });
+    }
+
+    async function uploadAndPublish() {
+        const name = document.getElementById('p-name').value;
+        const price = document.getElementById('p-price').value;
+        
+        if (!name || !price || imagesData.length === 0) {
+            saikoToast("يرجى ملء جميع البيانات ✨");
+            return;
+        }
+        
+        saikoToast("جاري النشر... 🚀");
+        let urls = [];
+        
+        try {
+            for (let img of imagesData) {
+                let formData = new FormData();
+                if (img.isCropped) {
+                    formData.append('image', img.blob, 'product.jpg');
+                } else {
+                    formData.append('image', img.file);
+                }
+                
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=Ff535d677000fe55d5f463ccfdadc283`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    urls.push(data.data.url);
+                }
+            }
+            
+            await db.collection("gifts").add({
+                name, 
+                price, 
+                images: urls, 
+                likes: 0, 
+                dislikes: 0, 
+                commentsDisabled: false, 
+                createdAt: new Date()
+            });
+            
+            // إعادة تعيين الحقول
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            imagesData = [];
+            renderPreviews();
+            
+            saikoToast("تم النشر بنجاح! ✅");
+            
+        } catch (e) {
+            console.error(e);
+            saikoToast("خطأ في رفع الصور ❌");
+        }
+    }
+
+    // ==================== جلب وعرض المنتجات ====================
+    function loadProducts() {
+        db.collection("gifts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            let totalLikes = 0;
+            
+            document.getElementById('total-p').innerText = snapshot.size;
+            
+            snapshot.forEach(doc => {
+                const product = doc.data();
+                totalLikes += (product.likes || 0);
+                
+                list.innerHTML += `
+                    <tr>
+                        <td>
+                            <img src="${product.images[0]}" class="prod-img">
+                            <br>
+                            <small>${product.name}</small>
+                        </td>
+                        <td>${product.price}ج</td>
+                        <td>
+                            <div class="form-check form-switch mb-1">
+                                <input class="form-check-input" type="checkbox" 
+                                    ${product.commentsDisabled ? '' : 'checked'} 
+                                    onclick="toggleComments('${doc.id}', ${product.commentsDisabled})">
+                                <small>${product.commentsDisabled ? 'مغلق' : 'مفتوح'}</small>
+                            </div>
+                            <div id="comm-${doc.id}" style="max-height:100px; overflow-y:auto; min-width:180px"></div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteItem('${doc.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                    
+                loadComments(doc.id);
+            });
+            
+            document.getElementById('total-likes').innerText = totalLikes;
+            filterAdminProducts();
+        });
+    }
+
+    function loadComments(productId) {
+        db.collection("gifts").doc(productId)
+            .collection("comments")
+            .orderBy("pinned", "desc")
+            .orderBy("createdAt", "desc")
+            .onSnapshot(snapshot => {
+                const box = document.getElementById(`comm-${productId}`);
+                if (!box) return;
+                box.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const comment = doc.data();
+                    box.innerHTML += `
+                    <div class="comment-item ${comment.pinned ? 'is-pinned-admin' : ''}">
+                        <span class="text-truncate" style="max-width:100px">${comment.text}</span>
+                        <span>
+                            <i class="fas fa-thumbtack me-2 pin-btn ${comment.pinned ? 'pin-active' : 'pin-inactive'}" 
+                               onclick="togglePin('${productId}','${doc.id}',${comment.pinned})"></i>
+                            <i class="fas fa-trash-alt text-danger" style="cursor:pointer" 
+                               onclick="confirmDeleteComment('${productId}','${doc.id}')"></i>
+                        </span>
+                    </div>`;
+                });
+            });
+    }
+
+    function filterAdminProducts() {
+        let input = document.getElementById('adminSearchInput').value.toLowerCase();
+        let rows = document.getElementById('product-list').getElementsByTagName('tr');
+        for (let row of rows) {
+            row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+        }
+    }
+
+    // ==================== دوال التحكم ====================
+    async function bulkToggleComments(disable) {
+        Swal.fire({
+            title: 'تأكيد العملية؟',
+            text: disable ? 'سيتم قفل جميع التعليقات' : 'سيتم فتح جميع التعليقات',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'نعم',
+            cancelButtonText: 'إلغاء'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const snapshot = await db.collection("gifts").get();
+                const batch = db.batch();
+                snapshot.forEach(doc => {
+                    batch.update(doc.ref, { commentsDisabled: disable });
+                });
+                await batch.commit();
+                saikoToast(disable ? "تم قفل جميع التعليقات 🔒" : "تم فتح جميع التعليقات 🔓");
+            }
+        });
+    }
+
+    async function bulkDeleteComments() {
+        Swal.fire({
+            title: 'حذف كل التعليقات؟',
+            text: 'هذا الإجراء لا يمكن التراجع عنه',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء',
+            confirmButtonColor: '#e74c3c'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const products = await db.collection("gifts").get();
+                for (const product of products.docs) {
+                    const comments = await product.ref.collection("comments").get();
+                    const batch = db.batch();
+                    comments.forEach(comment => batch.delete(comment.ref));
+                    await batch.commit();
+                }
+                saikoToast("تم مسح جميع التعليقات 🗑️");
+            }
+        });
+    }
+
+    async function togglePin(productId, commentId, currentPinned) {
+        await db.collection("gifts")
+            .doc(productId)
+            .collection("comments")
+            .doc(commentId)
+            .update({ pinned: !currentPinned });
+    }
+
+    async function toggleComments(productId, currentStatus) {
+        await db.collection("gifts")
+            .doc(productId)
+            .update({ commentsDisabled: !currentStatus });
+    }
+
+    async function deleteItem(productId) {
+        Swal.fire({
+            title: 'حذف المنتج؟',
+            text: 'هل أنت متأكد من حذف هذا المنتج؟',
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await db.collection("gifts").doc(productId).delete();
+                saikoToast("تم حذف المنتج ✅");
+            }
+        });
+    }
+
+    function confirmDeleteComment(productId, commentId) {
+        Swal.fire({
+            title: 'حذف التعليق؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'حذف',
+            cancelButtonText: 'إلغاء'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                db.collection("gifts")
+                    .doc(productId)
+                    .collection("comments")
+                    .doc(commentId)
+                    .delete();
+            }
+        });
+    }
+
+    // ==================== إحصائيات الزوار ====================
+    function loadVisitorStats() {
+        const yearStr = new Date().toISOString().substring(0, 4);
+        db.collection("stats")
+            .doc("yearly")
+            .collection("years")
+            .doc(yearStr)
+            .onSnapshot(doc => {
+                document.getElementById('total-v-all').innerText = 
+                    doc.exists ? doc.data().count : 0;
+            });
+    }
+
+    async function resetStats() {
+        Swal.fire({
+            title: 'تصفير عداد الزوار؟',
+            text: 'هل تريد تصفير عداد زوار السنة الحالية؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'نعم، صفّر',
+            cancelButtonText: 'إلغاء'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const yearStr = new Date().toISOString().substring(0, 4);
+                await db.collection("stats")
+                    .doc("yearly")
+                    .collection("years")
+                    .doc(yearStr)
+                    .delete();
+                saikoToast("تم تصفير العداد 🔄");
+            }
+        });
+    }
+
+    // ==================== تهيئة الصفحة ====================
+    window.onload = function() {
+        // إضافة حدث لزر Enter في حقلي الدخول
+        document.getElementById('login-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        
+        // إضافة حدث لزر Enter في حقلي الترخيص
+        document.getElementById('license-key').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') activateLicense();
+        });
+        
+        // التحقق من أن النظام يعمل
+        console.log('SAIKO Admin System Loaded ✅');
+        console.log('Device ID:', deviceId);
+    };
+</script>
+</body>
+</html>
